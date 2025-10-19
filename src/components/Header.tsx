@@ -1,5 +1,7 @@
-import { Heart, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
+// @ts-ignore
+import logo from '../assets/Logo.png';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,23 +11,26 @@ export function Header() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
-              <Heart className="w-6 h-6 text-white fill-white" />
+            <div className="w-16 h-16  rounded-lg flex items-center justify-center">
+              <img src={logo} alt="Logo" className="w-15 h-15 text-white fill-white" />
             </div>
-            <span className="text-2xl font-bold text-gray-900">HopeGlobal</span>
+            <span className="text-2xl font-extrabold text-gray-900 font-serif tracking-wide">
+              युवाशक्ती बहुउद्देशीय सेवाभावी संस्था
+            </span>
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
             <a href="#home" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors">Home</a>
             <a href="#about" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors">About</a>
+            <a href='#our-members' className="text-gray-700 hover:text-emerald-600 font-medium transition-colors">Our Member</a>
+            <a href='#gallery' className="text-gray-700 hover:text-emerald-600 font-medium transition-colors">Gallery</a>
             <a href="#causes" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors">Our Causes</a>
             <a href="#impact" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors">Impact</a>
-            <a href="#contact" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors">Contact</a>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <button className="px-6 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
-              Donate
+            <button className="px-4 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
+              Contact
             </button>
           </div>
 
@@ -41,6 +46,8 @@ export function Header() {
           <div className="md:hidden py-4 space-y-3 border-t border-gray-100">
             <a href="#home" className="block py-2 text-gray-700 hover:text-emerald-600 font-medium transition-colors">Home</a>
             <a href="#about" className="block py-2 text-gray-700 hover:text-emerald-600 font-medium transition-colors">About</a>
+            <a href='#our-members' className="text-gray-700 hover:text-emerald-600 font-medium transition-colors">Our Member</a>
+            <a href='#gallery' className="text-gray-700 hover:text-emerald-600 font-medium transition-colors">Gallery</a>
             <a href="#causes" className="block py-2 text-gray-700 hover:text-emerald-600 font-medium transition-colors">Our Causes</a>
             <a href="#impact" className="block py-2 text-gray-700 hover:text-emerald-600 font-medium transition-colors">Impact</a>
             <a href="#contact" className="block py-2 text-gray-700 hover:text-emerald-600 font-medium transition-colors">Contact</a>

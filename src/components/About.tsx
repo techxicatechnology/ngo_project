@@ -3,23 +3,23 @@ import { Target, Users, Globe, Award } from 'lucide-react';
 const values = [
   {
     icon: Target,
-    title: 'Our Mission',
-    description: 'To empower underserved communities through sustainable development, education, and healthcare initiatives that create lasting positive change.'
+    title: 'आमचे ध्येय',
+    description: 'शाश्वत विकास, शिक्षण आणि आरोग्य उपक्रमांद्वारे दुर्बल समाजांना सक्षम बनवणे आणि सकारात्मक बदल घडवणे.'
   },
   {
     icon: Users,
-    title: 'Community First',
-    description: 'We work directly with local communities, ensuring our programs are culturally sensitive and meet their specific needs.'
+    title: 'समाज प्रथम',
+    description: 'आम्ही स्थानिक समाजांसोबत थेट काम करतो, त्यांच्या गरजा आणि संस्कृतीला अनुसरून कार्यक्रम राबवतो.'
   },
   {
     icon: Globe,
-    title: 'Global Impact',
-    description: 'Operating in 35 countries across 4 continents, we bring hope and opportunity to those who need it most.'
+    title: 'जागतिक प्रभाव',
+    description: '३५ देशांमध्ये कार्यरत, आम्ही गरजू लोकांपर्यंत आशा आणि संधी पोहोचवतो.'
   },
   {
     icon: Award,
-    title: 'Transparency',
-    description: 'We maintain the highest standards of accountability, ensuring every donation directly supports our programs.'
+    title: 'पारदर्शकता',
+    description: 'आम्ही उच्चतम जबाबदारी राखतो, प्रत्येक देणगी थेट आमच्या कार्यक्रमांना पाठिंबा देते.'
   }
 ];
 
@@ -32,36 +32,31 @@ export function About() {
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <img
                 src="https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&w=1200"
-                alt="Team working together"
+                alt="संघ एकत्र काम करत आहे"
                 className="w-full h-[500px] object-cover"
               />
             </div>
             <div className="absolute -bottom-6 -right-6 bg-white p-8 rounded-xl shadow-xl max-w-xs">
-              <div className="text-4xl font-bold text-emerald-600 mb-2">15+ Years</div>
-              <div className="text-gray-600">Creating meaningful change worldwide</div>
+              <div className="text-4xl font-bold text-emerald-600 mb-2">१५+ वर्षे</div>
+              <div className="text-gray-600">जगभरात सकारात्मक बदल घडवताना</div>
             </div>
           </div>
 
           <div className="space-y-6">
             <div className="inline-block px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold">
-              About Us
+              आमच्याबद्दल
             </div>
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">
-              Building a Better Tomorrow, Together
+              एकत्र येऊन उज्वल भविष्य घडवूया
             </h2>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Founded in 2010, HopeGlobal has been at the forefront of humanitarian work,
-              providing critical support to communities facing poverty, lack of education,
-              and limited healthcare access.
+              २०२४ मध्ये स्थापन झालेली युवाशक्ती ही मानवतावादी कार्यात अग्रस्थानी आहे.
+              गरिबी, शिक्षणाचा अभाव आणि मर्यादित आरोग्य सेवा असलेल्या समाजांना मदत पुरवते.
             </p>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Through partnerships with local organizations and dedicated volunteers, we've
-              successfully implemented sustainable programs that have transformed the lives
-              of over 50,000 individuals and continue to grow our impact every day.
+              स्थानिक संस्थांसोबत भागीदारी आणि समर्पित स्वयंसेवकांच्या मदतीने आम्ही शाश्वत कार्यक्रम राबवले आहेत,
+              ज्यामुळे अनेकांचे जीवन बदलले आहे आणि आमचा प्रभाव दररोज वाढत आहे.
             </p>
-            <button className="mt-4 px-8 py-4 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
-              Read Our Story
-            </button>
           </div>
         </div>
 

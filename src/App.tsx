@@ -5,6 +5,8 @@ import { Causes } from './components/Causes';
 import { Impact } from './components/Impact';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
+import { Gallery } from './components/Gallery';
+import OurMembers from './components/OurMembers';
 
 function App() {
   return (
@@ -13,7 +15,9 @@ function App() {
       <main>
         <Hero />
         <About />
+         <Gallery/>
         <Causes />
+        <OurMembers/>
         <Impact />
         <Contact />
       </main>
