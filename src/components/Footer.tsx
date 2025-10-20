@@ -1,5 +1,3 @@
-import { Heart } from 'lucide-react';
-// @ts-ignore
 import logo from '../assets/Logo.png';
 export function Footer() {
   return (
@@ -29,8 +27,6 @@ export function Footer() {
             <ul className="space-y-2">
               <li><a href="#about" className="text-gray-400 hover:text-emerald-400 transition-colors">About Us</a></li>
               <li><a href="#gallery" className="text-gray-400 hover:text-emerald-400 transition-colors">Gallery</a></li>
-              <li><a href="#causes" className="text-gray-400 hover:text-emerald-400 transition-colors">Our Causes</a></li>
-              <li><a href="#impact" className="text-gray-400 hover:text-emerald-400 transition-colors">Impact</a></li>
               <li><a href="#contact" className="text-gray-400 hover:text-emerald-400 transition-colors">Contact</a></li>
             </ul>
           </div>

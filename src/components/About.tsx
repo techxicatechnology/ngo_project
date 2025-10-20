@@ -1,6 +1,7 @@
 import { Target, Users, Globe, Award } from 'lucide-react';
+import pic1 from '../assets/pic1.webp';
 
-const values = [
+const values = [  
   {
     icon: Target,
     title: 'आमचे ध्येय',
@@ -10,11 +11,6 @@ const values = [
     icon: Users,
     title: 'समाज प्रथम',
     description: 'आम्ही स्थानिक समाजांसोबत थेट काम करतो, त्यांच्या गरजा आणि संस्कृतीला अनुसरून कार्यक्रम राबवतो.'
-  },
-  {
-    icon: Globe,
-    title: 'जागतिक प्रभाव',
-    description: '३५ देशांमध्ये कार्यरत, आम्ही गरजू लोकांपर्यंत आशा आणि संधी पोहोचवतो.'
   },
   {
     icon: Award,
@@ -31,13 +27,13 @@ export function About() {
           <div className="relative">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src="https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                src={pic1}
                 alt="संघ एकत्र काम करत आहे"
                 className="w-full h-[500px] object-cover"
               />
             </div>
             <div className="absolute -bottom-6 -right-6 bg-white p-8 rounded-xl shadow-xl max-w-xs">
-              <div className="text-4xl font-bold text-emerald-600 mb-2">१५+ वर्षे</div>
+              <div className="text-4xl font-bold text-emerald-600 mb-2">१+ वर्षे</div>
               <div className="text-gray-600">जगभरात सकारात्मक बदल घडवताना</div>
             </div>
           </div>
@@ -60,7 +56,7 @@ export function About() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {values.map((value, index) => {
             const Icon = value.icon;
             return (

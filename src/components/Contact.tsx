@@ -2,6 +2,7 @@ import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'luc
 
 export function Contact() {
   return (
+    <div className='pt-20'>
     <section id="contact" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16">
@@ -20,7 +21,7 @@ export function Contact() {
                 <div>
                   <div className="font-semibold text-gray-900 mb-1">ईमेल करा</div>
                   <a href="mailto:info@hopeglobal.org" className="text-gray-600 hover:text-emerald-600 transition-colors">
-                    info@hopeglobal.org
+                    info@yovashakti.org
                   </a>
                 </div>
               </div>
@@ -32,7 +33,7 @@ export function Contact() {
                 <div>
                   <div className="font-semibold text-gray-900 mb-1">फोन करा</div>
                   <a href="tel:+1234567890" className="text-gray-600 hover:text-emerald-600 transition-colors">
-                    +1 (234) 567-890
+                    9049719826
                   </a>
                 </div>
               </div>
@@ -44,8 +45,8 @@ export function Contact() {
                 <div>
                   <div className="font-semibold text-gray-900 mb-1">पत्ता</div>
                   <div className="text-gray-600">
-                    १२३ होप स्ट्रीट<br />
-                    न्यूयॉर्क, NY १०००१
+                   Reg.No: F-0012906 | Jalna | Nonprofit Organization<br/>
+              Krishna Plaza , Railway station Road , Tq, Dist - Jalna 431501<br/>
                   </div>
                 </div>
               </div>
@@ -131,5 +132,6 @@ export function Contact() {
         </div>
       </div>
     </section>
+    </div>
   );
 }
