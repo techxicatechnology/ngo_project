@@ -1,4 +1,4 @@
-import { Target, Users, Globe, Award } from 'lucide-react';
+import { Target, Users, Award } from 'lucide-react';
 import pic1 from '../assets/pic1.webp';
 
 const values = [  

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
@@ -10,31 +10,27 @@ import Skims from './components/Skims';
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen">
-        <Header />
-        <main>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  <Hero />
-                  <About />
-                  <Gallery />
-                  <OurMembers />
-                  
-                  
-                </>
-              }
-            />
-            <Route path='/contact' element={<Contact />} />
-            <Route path="/skims" element={<Skims />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <div className="min-h-screen">
+      <Header />
+      <main>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Hero />
+                <About />
+                <Gallery />
+                <OurMembers />
+              </>
+            }
+          />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/skims" element={<Skims />} />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
   );
 }
 
