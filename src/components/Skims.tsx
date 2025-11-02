@@ -28,7 +28,7 @@ const Skims = () => {
           className="text-center mb-16"
         >
           <h1 className="text-5xl md:text-4xl font-extrabold bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent mb-4">
-            आमचे NGO उपक्रम
+            Our NGO activities
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
             समाजाच्या विकासासाठी आणि सक्षमीकरणासाठी आमचे विविध उपक्रम

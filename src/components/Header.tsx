@@ -1,14 +1,23 @@
 import { Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import logo from '../assets/Logo.png';
-import logo1 from '../assets/logo2.jpg';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("");
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleScrollTo = (id: string) => {
     if (location.pathname !== "/") {
@@ -33,98 +42,185 @@ export function Header() {
   }, [location]);
 
   const linkClass = (name: string) =>
-    `font-medium transition-colors ${activeSection === name ? "text-emerald-600 underline" : "text-gray-700 hover:text-emerald-600"}`;
+    `font-medium transition-all duration-300 px-3 py-2 rounded-lg relative group ${
+      activeSection === name 
+        ? "text-white bg-gradient-to-r from-emerald-600 to-green-600 shadow-lg shadow-emerald-200/50" 
+        : "text-gray-700 hover:text-emerald-700 hover:bg-emerald-50"
+    }`;
+
+  const mobileLinkClass = (name: string) =>
+    `font-medium transition-all duration-300 px-4 py-3 rounded-lg block relative group ${
+      activeSection === name 
+        ? "text-white bg-gradient-to-r from-emerald-600 to-green-600 shadow-md" 
+        : "text-gray-700 hover:text-emerald-700 hover:bg-gray-50"
+    }`;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-sm">
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      isScrolled 
+        ? 'bg-white/98 backdrop-blur-xl shadow-xl border-b border-gray-200/60' 
+        : 'bg-white/95 backdrop-blur-lg shadow-md'
+    }`}>
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-16 lg:h-18">
           {/* Left Section - Logo and Organization Name */}
-          <div className="flex items-center space-x-2 flex-1">
-            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg flex items-center justify-center">
-              <img src={logo} alt="Logo" className="w-14 h-14 sm:w-15 sm:h-15 object-contain" />
+          <div className="flex items-center space-x-3 flex-1">
+            <div className="relative group">
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 p-1 shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-emerald-200/50">
+                <img 
+                  src={logo} 
+                  alt="Logo" 
+                  className="w-full h-full object-contain rounded-lg" 
+                />
+              </div>
+              {/* Subtle glow effect */}
+              <div className="absolute inset-0 rounded-xl bg-emerald-400/20 blur-sm group-hover:bg-emerald-400/30 transition-all duration-300 -z-10"></div>
             </div>
-            <span className="text-xl sm:text-xl font-extrabold text-gray-900 font-serif tracking-wide">
-              युवाशक्ती बहुउद्देशीय सेवाभावी संस्था
-            </span>
+            <div className="flex flex-col">
+              <span className="text-base sm:text-lg font-bold text-gray-900 font-serif tracking-tight leading-tight bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                युवाशक्ती बहुउद्देशीय
+              </span>
+              <span className="text-xs sm:text-sm font-semibold text-emerald-600 font-serif tracking-wide mt-0.5">
+                सेवाभावी संस्था
+              </span>
+            </div>
           </div>
 
           {/* Center Section - Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-6 lg:space-x-8 mx-8">
-            <Link to="/" className={linkClass("")} onClick={() => setActiveSection("")}>Home</Link>
-            <a onClick={() => handleScrollTo("about")} className={linkClass("about")}>About</a>
-            <a onClick={() => handleScrollTo("our-members")} className={linkClass("our-members")}>Our Member</a>
-            <a onClick={() => handleScrollTo("gallery")} className={linkClass("gallery")}>Gallery</a>
-            <Link to="/skims" className={linkClass("skims")}>Our skims</Link>
-            <Link to="/contact" className={linkClass("contact")}>Contact</Link>
+          <div className="hidden md:flex items-center space-x-1 lg:space-x-2 mx-8">
+            <Link 
+              to="/" 
+              className={linkClass("")} 
+              onClick={() => setActiveSection("")}
+            >
+              <span className="relative z-10">Home</span>
+              {activeSection === "" && (
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-600 rounded-lg animate-pulse-slow"></div>
+              )}
+            </Link>
+            <a 
+              onClick={() => handleScrollTo("about")} 
+              className={`cursor-pointer ${linkClass("about")}`}
+            >
+              <span className="relative z-10">About</span>
+              {activeSection === "about" && (
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-600 rounded-lg animate-pulse-slow"></div>
+              )}
+            </a>
+            <a 
+              onClick={() => handleScrollTo("our-members")} 
+              className={`cursor-pointer ${linkClass("our-members")}`}
+            >
+              <span className="relative z-10">Our Members</span>
+              {activeSection === "our-members" && (
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-600 rounded-lg animate-pulse-slow"></div>
+              )}
+            </a>
+            <a 
+              onClick={() => handleScrollTo("gallery")} 
+              className={`cursor-pointer ${linkClass("gallery")}`}
+            >
+              <span className="relative z-10">Gallery</span>
+              {activeSection === "gallery" && (
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-600 rounded-lg animate-pulse-slow"></div>
+              )}
+            </a>
+            <Link 
+              to="/skims" 
+              className={linkClass("skims")}
+            >
+              <span className="relative z-10">Our SKIMS</span>
+              {activeSection === "skims" && (
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-600 rounded-lg animate-pulse-slow"></div>
+              )}
+            </Link>
+            <Link 
+              to="/certificates" 
+              className={linkClass("certificates")}
+            >
+              <span className="relative z-10">Our Certificates</span>
+              {activeSection === "certificates" && (
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-600 rounded-lg animate-pulse-slow"></div>
+              )}
+            </Link>
+            <Link 
+              to="/contact" 
+              className={linkClass("contact")}
+            >
+              <span className="relative z-10">Contact</span>
+              {activeSection === "contact" && (
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-600 rounded-lg animate-pulse-slow"></div>
+              )}
+            </Link>
           </div>
 
-          {/* Right Section - Collaboration Section */}
-          <div className="flex items-center space-x-4">
-            {/* Improved Collaboration Section with Link */}
-            <div className="hidden md:flex items-center space-x-3 bg-gradient-to-r from-emerald-50 to-blue-50 px-4 py-2 rounded-xl border border-emerald-100 shadow-sm hover:shadow-md transition-all duration-200 hover:from-emerald-100 hover:to-blue-100 cursor-pointer">
-              <a
-                href="https://www.techxicatechnology.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-3 no-underline"
-              >
-                <img
-                  src={logo1}
-                  alt="Techxica Technology"
-                  className="w-10 h-10 object-contain rounded-lg border border-gray-200 bg-white p-1 hover:scale-105 transition-transform duration-200"
-                />
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-gray-500">In Collaboration with</span>
-                  <span className="text-sm font-semibold text-gray-800 whitespace-nowrap hover:text-emerald-700 transition-colors">
-                    Techxica Technology
-                  </span>
-                </div>
-              </a>
-            </div>
-
+          {/* Right Section - Mobile Menu Button */}
+          <div className="flex items-center">
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              className={`md:hidden p-2.5 rounded-xl transition-all duration-300 relative group ${
+                isMenuOpen 
+                  ? 'bg-emerald-100 text-emerald-700 shadow-inner' 
+                  : 'hover:bg-gray-100 text-gray-700 hover:shadow-md'
+              }`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {/* Ripple effect */}
+              <span className={`absolute inset-0 rounded-xl bg-emerald-200/30 scale-0 group-hover:scale-100 transition-transform duration-300 ${isMenuOpen ? 'scale-100' : ''}`}></span>
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 space-y-3 border-t border-gray-100 bg-white shadow-lg rounded-b-lg">
-            <Link to="/" className={linkClass("")} onClick={() => { setActiveSection(""); setIsMenuOpen(false); }}>Home</Link>
-            <a onClick={() => handleScrollTo("about")} className={linkClass("about")}>About</a>
-            <a onClick={() => handleScrollTo("our-members")} className={linkClass("our-members")}>Our Member</a>
-            <a onClick={() => handleScrollTo("gallery")} className={linkClass("gallery")}>Gallery</a>
-            <Link to="/skims" className={linkClass("skims")} onClick={() => setIsMenuOpen(false)}>Our skims</Link>
-            <Link to="/contact" className={linkClass("contact")} onClick={() => setIsMenuOpen(false)}>Contact</Link>
-
-            {/* Mobile Collaboration Section with Link */}
-            <div className="pt-4 border-t border-gray-100">
-              <a
-                href="https://www.techxicatechnology.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-3 bg-gray-50 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors no-underline"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <img
-                  src={logo1}
-                  alt="Techxica Technology"
-                  className="w-8 h-8 object-contain rounded border border-gray-200 bg-white p-1"
-                />
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-gray-500">In Collaboration with</span>
-                  <span className="text-sm font-semibold text-gray-800 hover:text-emerald-700 transition-colors">
-                    Techxica Technology
-                  </span>
-                </div>
-              </a>
-            </div>
+          <div className="md:hidden py-4 space-y-2 border-t border-gray-200/60 bg-white/98 backdrop-blur-xl shadow-2xl rounded-b-2xl animate-slideDown">
+            <Link 
+              to="/" 
+              className={mobileLinkClass("")} 
+              onClick={() => { setActiveSection(""); setIsMenuOpen(false); }}
+            >
+              <span className="relative z-10">Home</span>
+            </Link>
+            <a 
+              onClick={() => handleScrollTo("about")} 
+              className={`cursor-pointer ${mobileLinkClass("about")}`}
+            >
+              <span className="relative z-10">About</span>
+            </a>
+            <a 
+              onClick={() => handleScrollTo("our-members")} 
+              className={`cursor-pointer ${mobileLinkClass("our-members")}`}
+            >
+              <span className="relative z-10">Our Members</span>
+            </a>
+            <a 
+              onClick={() => handleScrollTo("gallery")} 
+              className={`cursor-pointer ${mobileLinkClass("gallery")}`}
+            >
+              <span className="relative z-10">Gallery</span>
+            </a>
+            <Link 
+              to="/skims" 
+              className={mobileLinkClass("skims")} 
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <span className="relative z-10">Our SKIMS</span>
+            </Link>
+            <Link 
+              to="/certificates" 
+              className={mobileLinkClass("certificates")} 
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <span className="relative z-10">Our Certificates</span>
+            </Link>
+            <Link 
+              to="/contact" 
+              className={mobileLinkClass("contact")} 
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <span className="relative z-10">Contact</span>
+            </Link>
           </div>
         )}
       </nav>

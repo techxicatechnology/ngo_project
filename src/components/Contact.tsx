@@ -53,8 +53,8 @@ export function Contact() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-5xl md:text-5xl font-extrabold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent mb-4">
-              संपर्क करा
+            <h2 className="text-5xl md:text-4xl font-extrabold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent mb-4">
+              Contact
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
               आमच्याशी जुडा आणि बदल घडवण्यात भाग घ्या
@@ -185,7 +185,7 @@ export function Contact() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-bold text-gray-900 mb-2">
-                    पूर्ण नाव *
+                    Full Name
                   </label>
                   <input
                     type="text"
@@ -198,7 +198,7 @@ export function Contact() {
 
                 <div>
                   <label htmlFor="email" className="block text-sm font-bold text-gray-900 mb-2">
-                    ईमेल पत्ता *
+                    Email
                   </label>
                   <input
                     type="email"
@@ -209,22 +209,11 @@ export function Contact() {
                   />
                 </div>
 
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-bold text-gray-900 mb-2">
-                    विषय *
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    required
-                    className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all duration-300 bg-gray-50 focus:bg-white"
-                    placeholder="कशासाठी संपर्क साधत आहात?"
-                  />
-                </div>
+                
 
                 <div>
                   <label htmlFor="message" className="block text-sm font-bold text-gray-900 mb-2">
-                    संदेश *
+                   Message
                   </label>
                   <textarea
                     id="message"
@@ -248,7 +237,7 @@ export function Contact() {
                 >
                   {formStatus === 'idle' && (
                     <>
-                      <span>संदेश पाठवा</span>
+                      <span>Send Message</span>
                       <Send className="w-5 h-5" />
                     </>
                   )}

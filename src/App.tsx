@@ -7,6 +7,7 @@ import { Footer } from './components/Footer';
 import { Gallery } from './components/Gallery';
 import OurMembers from './components/OurMembers';
 import Skims from './components/Skims';
+import Certificates from './components/Cerificates';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           />
           <Route path="/contact" element={<Contact />} />
           <Route path="/skims" element={<Skims />} />
+          <Route path="/certificates" element={<Certificates/>} />
         </Routes>
       </main>
       <Footer />
