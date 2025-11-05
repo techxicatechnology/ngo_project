@@ -1,20 +1,35 @@
 import { motion, Variants } from "framer-motion";
 import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin, Send, CheckCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import emailjs from '@emailjs/browser';
 
 export function Contact() {
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('sending');
-    setTimeout(() => {
+
+    try {
+      // Replace these with your actual EmailJS credentials
+      const serviceID = 'service_dsfu14v';
+      const templateID = 'template_9gctlwi'; // This should match your EmailJS template
+      const userID = '-bL5JMJSqK0fVKPOh';
+
+      await emailjs.sendForm(serviceID, templateID, formRef.current!, userID);
+      
       setFormStatus('sent');
+      // Reset form
+      formRef.current?.reset();
       setTimeout(() => setFormStatus('idle'), 3000);
-    }, 1500);
+    } catch (error) {
+      console.error('Email sending failed:', error);
+      setFormStatus('idle');
+      alert('Message failed to send. Please try again.');
+    }
   };
 
-  // ✅ Fixed: Changed ease from string to proper type
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -33,7 +48,7 @@ export function Contact() {
       y: 0,
       transition: { 
         duration: 0.6, 
-        ease: [0.25, 0.1, 0.25, 1] // ✅ Use easing array instead of string
+        ease: [0.25, 0.1, 0.25, 1]
       }
     },
   };
@@ -95,10 +110,10 @@ export function Contact() {
                   <div>
                     <div className="font-bold text-gray-900 mb-2 text-lg">ईमेल करा</div>
                     <a 
-                      href="mailto:info@yovashakti.org" 
+                      href="mailto:yuvashaktingo21@gmail.com" 
                       className="text-emerald-600 hover:text-emerald-700 transition-colors font-medium"
                     >
-                      info@yovashakti.org
+                      yuvashaktingo21@gmail.com
                     </a>
                   </div>
                 </motion.div>
@@ -182,7 +197,14 @@ export function Contact() {
               viewport={{ once: true }}
               className="bg-white/80 backdrop-blur-sm p-8 lg:p-10 rounded-3xl shadow-2xl border border-gray-100"
             >
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+                {/* Hidden subject field that matches your template */}
+                <input
+                  type="hidden"
+                  name="subject"
+                  value="Contact Us: New Message from Website"
+                />
+                
                 <div>
                   <label htmlFor="name" className="block text-sm font-bold text-gray-900 mb-2">
                     Full Name
@@ -190,6 +212,7 @@ export function Contact() {
                   <input
                     type="text"
                     id="name"
+                    name="name" // Added name attribute for EmailJS
                     required
                     className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all duration-300 bg-gray-50 focus:bg-white"
                     placeholder="आपले नाव"
@@ -203,20 +226,20 @@ export function Contact() {
                   <input
                     type="email"
                     id="email"
+                    name="email" // Added name attribute for EmailJS
                     required
                     className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all duration-300 bg-gray-50 focus:bg-white"
                     placeholder="आपला ईमेल"
                   />
                 </div>
 
-                
-
                 <div>
                   <label htmlFor="message" className="block text-sm font-bold text-gray-900 mb-2">
-                   Message
+                    Message
                   </label>
                   <textarea
                     id="message"
+                    name="message" // Added name attribute for EmailJS
                     rows={5}
                     required
                     className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all duration-300 resize-none bg-gray-50 focus:bg-white"
@@ -232,6 +255,8 @@ export function Contact() {
                   className={`w-full py-5 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center space-x-3 shadow-lg hover:shadow-2xl ${
                     formStatus === 'sent'
                       ? 'bg-green-500 text-white'
+                      : formStatus === 'sending'
+                      ? 'bg-gray-400 text-white cursor-not-allowed'
                       : 'bg-gradient-to-r from-emerald-600 to-blue-600 text-white hover:from-emerald-700 hover:to-blue-700'
                   }`}
                 >

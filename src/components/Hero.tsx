@@ -1,12 +1,16 @@
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
-import vkImage from "../assets/vk.png";
-import ngo1 from "../assets/ngo1.png";
-import ngo2 from "../assets/ngo2.png";
+import vkImage from "../assets/vk.webp";
+import ngo1 from "../assets/ngo1.webp";
+import ngo2 from "../assets/ngo2.webp";
 
 const handleDonateClick = () => {
   window.open("https://forms.gle/1WhmyerVnKq5NEFt9", "_blank");
 };
+
+const handleVolunteerClick = () => {
+  window.open("https://forms.gle/9DZMNxdV6udUZXme7", "_blank");
+}
 
 const carouselImages = [
   vkImage,
@@ -125,7 +129,7 @@ export function Hero() {
                     <span className="tracking-wide text-sm">देणगी द्या</span>
                     <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
-                  <button className="px-8 py-3 bg-white/15 backdrop-blur-md text-white rounded-xl font-semibold shadow-lg hover:bg-white/25 hover:shadow-xl hover:scale-105 transition-all duration-300 border border-white/20">
+                  <button onClick={handleVolunteerClick} className="px-8 py-3 bg-white/15 backdrop-blur-md text-white rounded-xl font-semibold shadow-lg hover:bg-white/25 hover:shadow-xl hover:scale-105 transition-all duration-300 border border-white/20">
                     <span className="tracking-wide text-sm">स्वयंसेवक बना</span>
                   </button>
                 </div>
