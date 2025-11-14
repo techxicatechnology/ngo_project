@@ -13,9 +13,9 @@ const coreMembers = [
 ];
 
 const members = [
-  { name: "Suresh Kharat", role: "सदस्य", image: MilindKharatImg },
-  { name: "Ramesh Kharat", role: "सदस्य", image: VilasKharatImg },
-  { name: "Priya Kharat", role: "सदस्य", image: vishalgaikwadImg },
+  { name: "Milind Kharat", role: "सदस्य", image: MilindKharatImg },
+  { name: "Vilas Kharat", role: "सदस्य", image: VilasKharatImg },
+  { name: "Vishal Gaikwad", role: "सदस्य", image: vishalgaikwadImg },
 ];
 
 export default function OurMembers() {
