@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@plugin "daisyui";
+
 @layer base {
   html {
     scroll-behavior: smooth;

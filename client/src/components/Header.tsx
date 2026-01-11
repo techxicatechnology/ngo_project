@@ -37,9 +37,6 @@ export function Header() {
     } else if (location.pathname === "/contact") {
       setActiveSection("contact");
     } 
-    else if (location.pathname === "/register") {
-      setActiveSection("register");
-    }
     else {
       setActiveSection(""); // Home or default
     }
@@ -159,15 +156,7 @@ export function Header() {
             </Link>
 
 
-            <Link 
-              to="/register" 
-              className={linkClass("register")}
-            >
-              <span className="relative z-10">Register</span>
-              {activeSection === "register" && (
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-600 rounded-lg animate-pulse-slow"></div>
-              )}
-            </Link>
+         
           </div>
 
           {/* Right Section - Mobile Menu Button */}
@@ -236,14 +225,6 @@ export function Header() {
               onClick={() => setIsMenuOpen(false)}
             >
               <span className="relative z-10">Contact</span>
-            </Link>
-
-            <Link 
-              to="/register" 
-              className={mobileLinkClass("register")} 
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <span className="relative z-10">Register</span>
             </Link>
 
 

@@ -3,14 +3,14 @@ import { useState, useEffect } from "react";
 import vkImage from "../assets/vk.webp";
 import ngo1 from "../assets/ngo1.webp";
 import ngo2 from "../assets/ngo2.webp";
+import { useNavigate } from "react-router-dom";
+
 
 const handleDonateClick = () => {
   window.open("https://forms.gle/1WhmyerVnKq5NEFt9", "_blank");
 };
 
-const handleVolunteerClick = () => {
-  window.open("https://forms.gle/9DZMNxdV6udUZXme7", "_blank");
-}
+
 
 const carouselImages = [
   vkImage,
@@ -20,7 +20,13 @@ const carouselImages = [
 ];
 
 export function Hero() {
+  const navigate = useNavigate();
+  
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  const handleVolunteerClick = () => {
+navigate("/register");
+}
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
