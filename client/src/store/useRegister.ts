@@ -51,6 +51,7 @@ export const useRegister = create<NgoCardStore>((set) => ({
         photo: res.data.data.image, 
         issueDate: res.data.data.issueDate,
       };
+      console.log("New user is ", res.data)
       set({ user: [newUser] });
     } catch (error) {
       console.error("Failed to register user", error);

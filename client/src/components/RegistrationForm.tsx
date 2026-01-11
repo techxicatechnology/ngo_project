@@ -1,7 +1,21 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRegister } from "../store/useRegister";
+import {
+  User,
+  Globe,
+  Camera,
+  ArrowRight,
+  Loader2,
+  AlertCircle,
+  Mail,
+  Phone,
+  MapPin,
+  CheckCircle2,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
+// --- Types ---
 interface RegisterUser {
   fullName: string;
   address: string;
@@ -15,13 +29,58 @@ interface RegisterUser {
   profilePhoto: File | null;
 }
 
+// --- Form Input Component (Compact English Version) ---
+const FormInput = ({
+  name,
+  value,
+  onChange,
+  placeholder,
+  label,
+  icon,
+  error,
+  type = "text",
+}: {
+  name: keyof RegisterUser;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  placeholder: string;
+  label: string;
+  icon?: React.ReactNode;
+  error?: string;
+  type?: string;
+}) => {
+  return (
+    <div className="relative w-full">
+      <label className="block mb-1.5 text-xs font-bold text-slate-600 ml-1">{label}</label>
+      <div className="relative">
+        <span className="absolute left-4 top-3.5 text-slate-400 pointer-events-none">{icon}</span>
+        <input
+          type={type}
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          className={`w-full h-12 pl-11 pr-4 rounded-xl border bg-slate-50 text-slate-800 text-sm transition-all outline-none
+          ${error
+            ? "border-red-500 focus:ring-2 focus:ring-red-100"
+            : "border-slate-200 focus:border-[#119F52] focus:ring-2 focus:ring-emerald-50"
+          }`}
+        />
+      </div>
+      {error && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{error}</p>}
+    </div>
+  );
+};
+
 const RegistrationForm = () => {
-  const {registerUser,isRegistering} = useRegister()
-  const navigate = useNavigate()
+  const { registerUser, isRegistering } = useRegister();
+  const navigate = useNavigate();
+  const brandGreen = "#119F52";
+
   const [formData, setFormData] = useState<RegisterUser>({
     fullName: "",
-    address: "",
-    state: "",
+    address: "India",
+    state: "Maharashtra",
     district: "",
     taluka: "",
     village: "",
@@ -31,236 +90,113 @@ const RegistrationForm = () => {
     profilePhoto: null,
   });
 
-  const [errors, setErrors] = useState<
-    Partial<Record<keyof RegisterUser, string>>
-  >({});
-
+  const [errors, setErrors] = useState<Partial<Record<keyof RegisterUser, string>>>({});
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-
-    setFormData({ ...formData, [name]: value });
-    setErrors({ ...errors, [name]: "" });
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name as keyof RegisterUser]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
+    if (e.target.files?.[0]) {
       const file = e.target.files[0];
-      setFormData({ ...formData, profilePhoto: file });
+      setFormData((prev) => ({ ...prev, profilePhoto: file }));
       setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
   const validate = () => {
+    const required: (keyof RegisterUser)[] = ["fullName", "mobileNumber", "district", "taluka", "village", "address", "dateOfBirth"];
     const newErrors: Partial<Record<keyof RegisterUser, string>> = {};
-
-    if (!formData.fullName.trim()) newErrors.fullName = "This field is required";
-    if (!formData.address.trim()) newErrors.address = "This field is required";
-    if (!formData.state.trim()) newErrors.state = "This field is required";
-    if (!formData.district.trim()) newErrors.district = "This field is required";
-    if (!formData.taluka.trim()) newErrors.taluka = "This field is required";
-    if (!formData.village.trim()) newErrors.village = "This field is required";
-    if (!formData.mobileNumber.trim())
-      newErrors.mobileNumber = "This field is required";
-    if (!formData.email.trim()) newErrors.email = "This field is required";
-
+    required.forEach((field) => {
+      if (!formData[field]?.toString().trim()) newErrors[field] = "Required";
+    });
+    if (formData.mobileNumber && !/^\d{10}$/.test(formData.mobileNumber)) newErrors.mobileNumber = "10 digits required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-
-    await registerUser(formData)
-
-    console.log("Form submitted:", formData);
-    alert("Registration form submitted successfully!");
-    navigate("/demo")
-
-
+    await registerUser(formData);
+    navigate("/demo");
   };
 
-  const inputClass = (field: keyof RegisterUser) =>
-    `w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
-      errors[field]
-        ? "border-red-500 focus:ring-red-500"
-        : "border-gray-300 focus:ring-blue-500"
-    }`;
-
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg mt-20 shadow-md">
-      <h2 className="text-2xl font-bold text-center mb-6">
-        Registration Form
-      </h2>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Full Name */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Full Name *</label>
-          <input
-            name="fullName"
-            value={formData.fullName}
-            onChange={handleChange}
-            className={inputClass("fullName")}
-          />
-          {errors.fullName && (
-            <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>
-          )}
+    <div className="min-h-screen mt-10 bg-slate-50 py-10 px-4">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl mx-auto">
+        
+        {/* Nepali Name Header - Everything else is English */}
+        <div className="text-center mb-10">
+          <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
+            युवाशक्ती <span className="text-[#119F52]">बहुउद्देशीय संस्था</span>
+          </h1>
+          <p className="text-slate-400 font-bold mt-1 text-xs uppercase tracking-[0.2em]">Registration Form</p>
         </div>
 
-        {/* Address */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Address *</label>
-          <textarea
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            className={inputClass("address")}
-          />
-          {errors.address && (
-            <p className="text-red-500 text-sm mt-1">{errors.address}</p>
-          )}
-        </div>
-
-        {/* State & District */}
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">State *</label>
-            <input
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              className={inputClass("state")}
-            />
-            {errors.state && (
-              <p className="text-red-500 text-sm mt-1">{errors.state}</p>
-            )}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Profile Photo */}
+          <div className="flex justify-center mb-6">
+            <div className="relative">
+              <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg bg-white flex items-center justify-center">
+                {previewUrl ? (
+                  <img src={previewUrl} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <User size={40} className="text-slate-200" />
+                )}
+              </div>
+              <label className="absolute bottom-0 right-0 p-2.5 rounded-full cursor-pointer shadow-md border-2 border-white bg-[#119F52] hover:scale-110 transition-transform">
+                <Camera size={16} className="text-white" />
+                <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+              </label>
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">District *</label>
-            <input
-              name="district"
-              value={formData.district}
-              onChange={handleChange}
-              className={inputClass("district")}
-            />
-            {errors.district && (
-              <p className="text-red-500 text-sm mt-1">{errors.district}</p>
-            )}
-          </div>
-        </div>
-
-        {/* Taluka & Village */}
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Taluka *</label>
-            <input
-              name="taluka"
-              value={formData.taluka}
-              onChange={handleChange}
-              className={inputClass("taluka")}
-            />
-            {errors.taluka && (
-              <p className="text-red-500 text-sm mt-1">{errors.taluka}</p>
-            )}
+          {/* Personal Details (English) */}
+          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+              <User size={18} className="text-[#119F52]" /> Personal Details
+            </h3>
+            <div className="grid md:grid-cols-2 gap-5">
+              <FormInput name="fullName" label="Full Name" placeholder="Enter name" icon={<User size={14}/>} value={formData.fullName} onChange={handleChange} error={errors.fullName} />
+              <FormInput name="mobileNumber" label="Mobile Number" placeholder="10-digit number" icon={<Phone size={14}/>} value={formData.mobileNumber} onChange={handleChange} error={errors.mobileNumber} type="tel" />
+              <FormInput name="email" label="Email Address" placeholder="name@example.com" icon={<Mail size={14}/>} value={formData.email} onChange={handleChange} error={errors.email} type="email" />
+              <FormInput  name="dateOfBirth" label="Date of Birth" placeholder="" icon={<CheckCircle2 size={14}/>} value={formData.dateOfBirth} onChange={handleChange} error={errors.dateOfBirth} type="date" />
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Village *</label>
-            <input
-              name="village"
-              value={formData.village}
-              onChange={handleChange}
-              className={inputClass("village")}
-            />
-            {errors.village && (
-              <p className="text-red-500 text-sm mt-1">{errors.village}</p>
-            )}
-          </div>
-        </div>
-
-        {/* Mobile & Email */}
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Mobile Number *
-            </label>
-            <input
-              name="mobileNumber"
-              value={formData.mobileNumber}
-              onChange={handleChange}
-              className={inputClass("mobileNumber")}
-            />
-            {errors.mobileNumber && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.mobileNumber}
-              </p>
-            )}
+          {/* Location Details (English) */}
+          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+              <MapPin size={18} className="text-[#119F52]" /> Location Details
+            </h3>
+            <div className="grid md:grid-cols-2 gap-5">
+              <FormInput name="state" label="State" placeholder="State name" icon={<Globe size={14}/>} value="Maharastra" onChange={handleChange} error={errors.state} />
+              <FormInput name="district" label="District" placeholder="District name" icon={<Globe size={14}/>} value={formData.district} onChange={handleChange} error={errors.district} />
+              <FormInput name="taluka" label="Taluka" placeholder="Taluka name" icon={<Globe size={14}/>} value={formData.taluka} onChange={handleChange} error={errors.taluka} />
+              <FormInput name="village" label="Village / City" placeholder="Village name" icon={<Globe size={14}/>} value={formData.village} onChange={handleChange} error={errors.village} />
+              <FormInput name="address" label="Country" placeholder="India" icon={<MapPin size={14}/>} value="India" onChange={handleChange} error={errors.address} />
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Email *</label>
-            <input
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className={inputClass("email")}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-            )}
+          {/* Submit Button (English) */}
+          <div className="pt-2 pb-10">
+            <motion.button 
+              whileTap={{ scale: 0.97 }} 
+              type="submit" 
+              disabled={isRegistering} 
+              className="h-14 w-full rounded-2xl bg-[#119F52] text-white text-lg font-bold shadow-lg hover:bg-[#0e8544] disabled:opacity-70 flex items-center justify-center gap-3 transition-all"
+            >
+              {isRegistering ? <Loader2 className="animate-spin" size={24} /> : <>Register Now <ArrowRight size={20} /></>}
+            </motion.button>
           </div>
-        </div>
-
-        {/* DOB */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Date of Birth
-          </label>
-          <input
-            type="date"
-            name="dateOfBirth"
-            value={formData.dateOfBirth}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
-          />
-        </div>
-
-        {/* Photo */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Profile Photo
-          </label>
-          <input type="file" accept="image/*" onChange={handleFileChange} />
-          {previewUrl && (
-            <img
-              src={previewUrl}
-              alt="Preview"
-              className="w-24 h-24 rounded-full mt-2 object-cover"
-            />
-          )}
-        </div>
-
-       <button
-  type="submit"
-  disabled={isRegistering}
-  className={`w-full py-2 rounded-md text-white transition
-    ${isRegistering
-      ? "bg-blue-400 cursor-not-allowed"
-      : "bg-blue-600 hover:bg-blue-700"
-    }`}
->
-  {isRegistering ? "Registering..." : "Register"}
-</button>
-
-      </form>
+        </form>
+      </motion.div>
     </div>
   );
 };
