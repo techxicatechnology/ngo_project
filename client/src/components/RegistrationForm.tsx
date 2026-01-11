@@ -16,7 +16,7 @@ interface RegisterUser {
 }
 
 const RegistrationForm = () => {
-  const {registerUser} = useRegister()
+  const {registerUser,isRegistering} = useRegister()
   const navigate = useNavigate()
   const [formData, setFormData] = useState<RegisterUser>({
     fullName: "",
@@ -248,9 +248,18 @@ const RegistrationForm = () => {
           )}
         </div>
 
-        <button className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
-          Register
-        </button>
+       <button
+  type="submit"
+  disabled={isRegistering}
+  className={`w-full py-2 rounded-md text-white transition
+    ${isRegistering
+      ? "bg-blue-400 cursor-not-allowed"
+      : "bg-blue-600 hover:bg-blue-700"
+    }`}
+>
+  {isRegistering ? "Registering..." : "Register"}
+</button>
+
       </form>
     </div>
   );
