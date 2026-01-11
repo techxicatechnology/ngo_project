@@ -61,7 +61,7 @@ const NgoIdCard = forwardRef<HTMLDivElement, NgoIdCardProps>(
           {/* QR Code */}
           <div className="flex justify-center mt-4">
             <QRCode
-              value={`YSN-${area}-2026-${uniqueId}`}
+              value={`Id is :---> ${uniqueId}`}
               size={80}
             />
           </div>

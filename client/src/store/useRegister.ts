@@ -25,11 +25,14 @@ interface RegisterUserPayload {
 interface NgoCardStore {
   user: User[] | null;
   registerUser: (data: RegisterUserPayload) => Promise<void>;
+  isRegistering:boolean;
 }
 
 export const useRegister = create<NgoCardStore>((set) => ({
   user: null,
+  isRegistering:false,
   registerUser: async (data) => {
+    set({isRegistering:true})
     try {
       // ✅ Use FormData for file upload
       const formData = new FormData();
@@ -51,6 +54,9 @@ export const useRegister = create<NgoCardStore>((set) => ({
       set({ user: [newUser] });
     } catch (error) {
       console.error("Failed to register user", error);
+    }
+    finally{
+      set({isRegistering:false})
     }
   },
 }));
