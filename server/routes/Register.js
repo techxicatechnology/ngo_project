@@ -1,5 +1,5 @@
 import express from "express";
-import { RegisterUser } from "../controller.js/Register.js";    
+import { RegisterUser } from "../controller/Register.js";    
 import multer from "multer";
 import upload from "../config/multer.config.js";
 const Registerrouter = express.Router();

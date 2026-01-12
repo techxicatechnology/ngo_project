@@ -3,6 +3,7 @@ import cors from "cors";
 import connectDB from "./config/mongoose.js";
 import dotenv from "dotenv";
 import Registerrouter from "./routes/Register.js";
+import Donationrouter from "./routes/Donation.js";
 dotenv.config();
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json());
 connectDB();
 
 app.use("/api",Registerrouter)
+app.use("/api/donate",Donationrouter)
 
 app.get("/api/get",(req,res)=>{
   res.send("hi")
