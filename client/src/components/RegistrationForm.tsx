@@ -14,6 +14,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "react-hot-toast";
 
 // --- Types ---
 interface RegisterUser {
@@ -124,7 +125,7 @@ const RegistrationForm = () => {
     e.preventDefault();
     if (!validate()) return;
     await registerUser(formData);
-    navigate("/demo");
+    navigate("/card");
   };
 
   return (
