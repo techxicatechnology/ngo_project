@@ -6,9 +6,7 @@ import ngo2 from "../assets/ngo2.webp";
 import { useNavigate } from "react-router-dom";
 
 
-const handleDonateClick = () => {
-  window.open("https://forms.gle/1WhmyerVnKq5NEFt9", "_blank");
-};
+
 
 
 
@@ -27,6 +25,10 @@ export function Hero() {
   const handleVolunteerClick = () => {
 navigate("/register");
 }
+
+const handleDonateClick = () => {
+navigate("/donate");
+};
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % carouselImages.length);

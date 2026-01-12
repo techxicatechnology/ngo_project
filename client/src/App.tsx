@@ -10,10 +10,19 @@ import Skims from './components/Skims';
 import Certificates from './components/Cerificates';
 import RegistrationForm from './components/RegistrationForm';
 import NgoIdCardDemo from './components/NgoIdCardDemo';
+import DonationForm from "./components/DonationForm"
+import { Toaster } from "react-hot-toast";
+import NgoIdCard from './components/NgoIdCard';
 
 function App() {
   return (
     <div className="min-h-screen">
+      <Toaster
+  position="top-center"
+  reverseOrder={false}
+/>
+
+
       <Header />
       <main>
         <Routes>
@@ -32,8 +41,9 @@ function App() {
           <Route path="/skims" element={<Skims />} />
           <Route path="/certificates" element={<Certificates/>} />
           <Route path="/register" element={<RegistrationForm />} />
-          <Route path="/demo" element={<NgoIdCardDemo />} />
-        </Routes>
+          <Route path="/card" element={<NgoIdCardDemo />} />
+          <Route path="/donate" element={<DonationForm />} />
+        </Routes> 
       </main>
       <Footer />
     </div>
