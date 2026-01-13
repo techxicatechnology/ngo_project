@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import { Clipboard, CheckCircle, Clock, AlertCircle, Search, CreditCard, X, FileImage, User, DollarSign, Mail } from "lucide-react";
 import { useDonation } from "../store/useDonation";
+import DonationReceiptCard from "./DonationReceiptCard";
 
 type ViewMode = "donation" | "status";
 type StatusResult = string;
@@ -25,6 +26,7 @@ export default function DonationPage() {
   const [donationStatus] = useState<StatusResult>("pending");
   const [checkId, setCheckId] = useState<string>("");
   const [checkResult, setCheckResult] = useState<StatusResult | null>(null);
+  const [viewReceipt, setViewReceipt] = useState<boolean>(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -37,7 +39,7 @@ export default function DonationPage() {
 
   useEffect(() => {
   if (status) {
-    setCheckResult(status);
+    setCheckResult(status.status);
   }
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -257,26 +259,109 @@ export default function DonationPage() {
               <button onClick={handleCheckStatus} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-green-200">
                 Lookup Donation
               </button>
-              {checkResult && (
-                <div className="mt-8 pt-8 border-t border-slate-100 flex flex-col items-center">
-                  {checkResult === "pending" ? (
-                    <div className="bg-amber-50 p-6 rounded-3xl border border-amber-100 text-center w-full">
-                      <Clock size={32} className="text-amber-500 mb-2 mx-auto" />
-                      <h4 className="font-bold text-amber-900">Pending Verification</h4>
-                    </div>
-                  ) : checkResult === "verified" ? (
-                    <div className="bg-green-50 p-6 rounded-3xl border border-green-100 text-center w-full">
-                      <CheckCircle size={32} className="text-green-500 mb-2 mx-auto" />
-                      <h4 className="font-bold text-green-900">Payment Verified</h4>
-                    </div>
-                  ) : (
-                    <div className="bg-red-50 p-6 rounded-3xl border border-red-100 text-center w-full">
-                      <AlertCircle size={32} className="text-red-500 mb-2 mx-auto" />
-                      <h4 className="font-bold text-red-900">Record Not Found</h4>
-                    </div>
-                  )}
-                </div>
-              )}
+{checkResult && (
+  <div className="mt-8 pt-8 border-t border-slate-100 flex flex-col items-center">
+    {checkResult === "pending" && (
+      <div className="mt-8 w-full animate-in fade-in zoom-in-95">
+        <div className="bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200 rounded-3xl p-6 text-center shadow-sm">
+          <div className="flex justify-center mb-4">
+            <div className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center">
+              <Clock size={28} className="text-amber-600" />
+            </div>
+          </div>
+          <h4 className="text-lg font-black text-amber-900">Verification in Progress</h4>
+          <p className="text-sm text-amber-700 mt-2 leading-relaxed">
+            We’ve received your donation details.<br />
+            Our team is currently verifying it.
+          </p>
+          <div className="mt-5 bg-white/60 rounded-xl px-4 py-2 text-xs font-semibold text-amber-800 inline-block">
+            ⏳ This usually takes a few hours
+          </div>
+        </div>
+      </div>
+    )}
+
+    {checkResult === "verified" && status && (
+      <div className="w-full space-y-6 animate-in fade-in zoom-in-95">
+        {/* 📄 SUMMARY CARD */}
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-md">
+          <div className="space-y-4 text-sm">
+            <div className="flex justify-between items-center">
+              <span className="text-slate-500">Donation ID</span>
+              <span className="font-mono font-bold text-slate-900">{status.uniqueId}</span>
+            </div>
+            {status.name && <div className="flex justify-between"><span className="text-slate-500">Donor</span><span className="font-semibold">{status.name}</span></div>}
+            {status.email && <div className="flex justify-between"><span className="text-slate-500">Email</span><span className="font-medium text-slate-700 break-all">{status.email}</span></div>}
+            {status.amount && <div className="flex justify-between items-center"><span className="text-slate-500">Amount</span><span className="text-lg font-black text-green-700">₹ {status.amount}</span></div>}
+            <div className="flex justify-between items-center">
+              <span className="text-slate-500">Status</span>
+              <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold">VERIFIED</span>
+            </div>
+          </div>
+
+          {/* ACTIONS */}
+          <div className="mt-6 grid grid-cols-2 gap-3">
+            <button onClick={() => copyToClipboard(status.uniqueId)} className="flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-2xl font-bold transition">
+              <Clipboard size={16} /> Copy ID
+            </button>
+            <button onClick={() => {
+              setViewReceipt(!viewReceipt);
+              document.getElementById("receipt-section")?.scrollIntoView({ behavior: "smooth" });
+            }} className="bg-green-600 hover:bg-green-700 text-white py-3 rounded-2xl font-bold transition">
+              {viewReceipt ? "Hide Receipt" : "View Receipt"}
+            </button>
+          </div>
+        </div>
+
+        {/* FULL RECEIPT */}
+        <div id="receipt-section" className="pt-4 border-t border-dashed border-slate-200">
+          <p className="text-center text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">
+            Official Donation Receipt
+          </p>
+          {viewReceipt && <DonationReceiptCard donation={status} />}
+        </div>
+      </div>
+    )}
+
+    {(checkResult === "not-found" || checkResult === "invalid") && (
+      <div className="bg-red-50 p-6 rounded-3xl border border-red-100 text-center w-full">
+        <AlertCircle size={32} className="text-red-500 mb-2 mx-auto" />
+        <h4 className="font-bold text-red-900">
+          {checkResult === "not-found" ? "Record Not Found" : "Invalid Donation ID"}
+        </h4>
+      </div>
+    )}
+
+    {checkResult === "rejected" && status && (
+      <div className="mt-8 w-full animate-in fade-in zoom-in-95">
+        <div className="bg-red-50 border border-red-200 rounded-3xl p-6 text-center shadow-sm">
+          <div className="flex justify-center mb-4">
+            <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center">
+              <AlertCircle size={28} className="text-red-600" />
+            </div>
+          </div>
+          <h4 className="text-lg font-black text-red-900">Donation Rejected</h4>
+          <p className="text-sm text-red-700 mt-2 leading-relaxed">
+            Unfortunately, your donation could not be verified.<br />
+            Please check your transaction details or contact support.
+          </p>
+
+          <div className="mt-5 bg-white/60 rounded-xl px-4 py-2 text-xs font-semibold text-red-800 inline-block">
+            ❌ Donation Rejected
+          </div>
+
+          {status.uniqueId && (
+            <div className="mt-4 text-sm">
+              <span className="text-slate-500">Donation ID: </span>
+              <span className="font-mono font-bold">{status.uniqueId}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    )}
+  </div>
+)}
+
             </div>
           </div>
         )}
