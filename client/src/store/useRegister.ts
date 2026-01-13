@@ -26,16 +26,26 @@ interface RegisterUserPayload {
 interface NgoCardStore {
   user: User[] | null;
   registerUser: (data: RegisterUserPayload) => Promise<void>;
-  isRegistering:boolean;
+  isRegistering: boolean;
+  Alluser: any[];
+  totalPages: number;
+  currentPage: number;
+  itemsPerPage: number;
+  getAllUser: (page?: number) => Promise<void>;
+  setCurrentPage: (page: number) => void;
 }
 
-export const useRegister = create<NgoCardStore>((set) => ({
+export const useRegister = create<NgoCardStore>((set, get) => ({
   user: null,
-  isRegistering:false,
+  Alluser: [],
+  totalPages: 0,
+  currentPage: 1,
+  itemsPerPage: 10,
+  isRegistering: false,
+
   registerUser: async (data) => {
-    set({isRegistering:true})
+    set({ isRegistering: true });
     try {
-      // ✅ Use FormData for file upload
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
@@ -44,23 +54,35 @@ export const useRegister = create<NgoCardStore>((set) => ({
       });
 
       const res = await axiosInstance.post("/add", formData);
-      // const newUser: User = {
-      //   name: res.data.data.name,
-      //   uniqueId: res.data.data.uniqueId,
-      //   area: res.data.data.area,
-      //   photo: res.data.data.image, 
-      //   issueDate: res.data.data.issueDate,
-      // };
-      console.log("New user is ", res.data.data)
+      console.log("New user is ", res.data.data);
       toast.success("Registration successful");
       set({ user: res.data.data });
     } catch (error) {
       console.error("Failed to register user", error);
       toast.error("Failed to register user");
-      return;
+    } finally {
+      set({ isRegistering: false });
     }
-    finally{
-      set({isRegistering:false})
+  },
+
+  // ✅ Pagination-enabled fetch
+  getAllUser: async (page = 1) => {
+    try {
+      const { itemsPerPage } = get();
+      const res = await axiosInstance.get(`/list?page=${page}&limit=${itemsPerPage}`);
+      console.log("All users are ", res.data.data);
+      set({
+        Alluser: res.data.data,
+        totalPages: res.data.totalPages,
+        currentPage: res.data.currentPage,
+      });
+    } catch (error) {
+      console.log("Error fetching users: ", error);
     }
+  },
+
+  setCurrentPage: (page: number) => {
+    set({ currentPage: page });
+    get().getAllUser(page); // fetch new page
   },
 }));
