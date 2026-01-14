@@ -7,6 +7,7 @@ interface LoginStore{
     user : any;
     login : (email : string , password : string) => Promise<void>;
     checkAuth :()=>Promise<void>;
+    logout : ()=>Promise<void>;
 }
 
 
@@ -29,6 +30,15 @@ login: async (email: string, password: string) => {
   } catch (error: any) {
     console.log("error is", error.response?.data || error.message);
     toast.error(error.response?.data?.message || "Login failed");
+  }
+},
+logout: async () => {
+  try {
+    await axiosInstance.post("/admin/logout");
+    set({ user: null });
+  } catch (error: any) {
+    console.log("error is", error.response?.data || error.message);
+    toast.error(error.response?.data?.message || "Logout failed");
   }
 }
 }))
