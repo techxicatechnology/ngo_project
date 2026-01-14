@@ -1,12 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { Mail, Phone, Calendar, Hash, X, ZoomIn } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Mail, Phone, Calendar, Hash, X, ZoomIn,FileSpreadsheet } from 'lucide-react';
 import { useRegister } from '../store/useRegister';
+import * as XLSX from 'xlsx';
 
 const RegistrationPerson = () => {
   const { Alluser, getAllUser, currentPage, totalPages, setCurrentPage } = useRegister();
   
   // State for the enlarged image modal
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+    const exportToExcel = () => {
+    if (!Alluser || Alluser.length === 0) return;
+
+    // Map the data to a clean format for Excel
+    const excelData = Alluser.map(user => ({
+      "Full Name": user.fullName,
+      "Unique ID": user.uniqueId,
+      "Email Address": user.email,
+      "Mobile Number": user.mobileNumber,
+      "Registration Date": new Date(user.createdAt).toLocaleDateString('en-GB'),
+      "State/Area": user.area || 'N/A'
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Registered Members");
+
+    // Generate buffer and download
+    XLSX.writeFile(workbook, `NGO_Members_List_${new Date().toLocaleDateString()}.xlsx`);
+  };
 
   useEffect(() => {
     getAllUser(currentPage);
@@ -26,11 +48,22 @@ const RegistrationPerson = () => {
               A complete list of all verified community members.
             </p>
           </div>
+          <div>
+             <button
+            onClick={exportToExcel}
+            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg shadow-emerald-100 active:scale-95"
+          >
+            <FileSpreadsheet size={18} />
+            Export to Excel
+          </button>
+          </div>
         </div>
 
         {/* Table Container */}
         <div className="bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden">
           <table className="w-full border-collapse">
+          
+        
             <thead>
               <tr className="bg-slate-50/80 backdrop-blur-sm border-b border-slate-100">
                 <th className="px-8 py-5 text-left text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">User Identity</th>
