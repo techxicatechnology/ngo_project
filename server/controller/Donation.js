@@ -34,6 +34,7 @@ const mailOptions = {
       <div style="padding: 25px; color: #374151;">
         <p style="font-size: 16px;">Dear <strong>${name}</strong>,</p>
 
+
         <p style="font-size: 15px; line-height: 1.6;">
           We sincerely thank you for your generous contribution to <strong>Yuwashakti</strong>.
           Your support helps us empower youth and drive meaningful change in our community.
@@ -46,8 +47,17 @@ const mailOptions = {
             <span style="font-size: 20px; font-weight: bold; color: #166534;">
               NPR ${amount}
             </span>
+<br></br>
+            <strong>Unique Id is:</strong><br/>
+             <span style="font-size: 20px; font-weight: bold; color: #166534;">
+              ${uniqueId}
+            </span>
           </p>
         </div>
+
+         <p style="font-size: 15px; line-height: 1.6;">
+         Please keep this id safe , this is useful for you to be recognized.
+        </p>
 
         <p style="font-size: 15px; line-height: 1.6;">
           Your contribution will directly support our initiatives and help us reach those who need it most.
