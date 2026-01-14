@@ -3,12 +3,20 @@ import { useState, useEffect } from "react";
 import logo from "../assets/Logo.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  onTakePledge: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ onTakePledge }) => {
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("");
+
+
+
 
   // Scroll effect for header shadow
   useEffect(() => {
@@ -40,9 +48,9 @@ export const Header: React.FC = () => {
       setActiveSection("contact");
     } else if (location.pathname === "/certificates") {
       setActiveSection("certificates");
-    } 
-    else if(location.pathname === "/login"){
-setActiveSection("login")
+    }
+    else if (location.pathname === "/login") {
+      setActiveSection("login")
     }
     else {
       setActiveSection(""); // Home or default
@@ -50,17 +58,15 @@ setActiveSection("login")
   }, [location]);
 
   const linkClass = (name: string) =>
-    `font-medium transition-all duration-300 px-3 py-2 rounded-lg relative group ${
-      activeSection === name
-        ? "text-white bg-gradient-to-r from-emerald-600 to-green-600 shadow-lg shadow-emerald-200/50"
-        : "text-gray-700 hover:text-emerald-700 hover:bg-emerald-50"
+    `font-medium transition-all duration-300 px-3 py-2 rounded-lg relative group ${activeSection === name
+      ? "text-white bg-gradient-to-r from-emerald-600 to-green-600 shadow-lg shadow-emerald-200/50"
+      : "text-gray-700 hover:text-emerald-700 hover:bg-emerald-50"
     }`;
 
   const mobileLinkClass = (name: string) =>
-    `font-medium transition-all duration-300 px-4 py-3 rounded-lg block relative group ${
-      activeSection === name
-        ? "text-white bg-gradient-to-r from-emerald-600 to-green-600 shadow-md"
-        : "text-gray-700 hover:text-emerald-700 hover:bg-gray-50"
+    `font-medium transition-all duration-300 px-4 py-3 rounded-lg block relative group ${activeSection === name
+      ? "text-white bg-gradient-to-r from-emerald-600 to-green-600 shadow-md"
+      : "text-gray-700 hover:text-emerald-700 hover:bg-gray-50"
     }`;
 
   // Admin Login redirect
@@ -69,13 +75,19 @@ setActiveSection("login")
     navigate("/login");
   };
 
+  const handleTakePledge = () => {
+    setIsMenuOpen(false);
+    onTakePledge();
+  };
+
+
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled
-          ? "bg-white/98 backdrop-blur-xl shadow-xl border-b border-gray-200/60"
-          : "bg-white/95 backdrop-blur-lg shadow-md"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+        ? "bg-white/98 backdrop-blur-xl shadow-xl border-b border-gray-200/60"
+        : "bg-white/95 backdrop-blur-lg shadow-md"
+        }`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 lg:h-18">
@@ -138,6 +150,17 @@ setActiveSection("login")
               Contact
             </Link>
 
+            <button
+              onClick={handleTakePledge}
+              className={`${linkClass("pledge")} 
+    bg-gradient-to-r from-orange-500 to-red-500 
+    text-white hover:from-orange-600 hover:to-red-600
+    shadow-md`}
+            >
+              Take Pledge
+            </button>
+
+
             {/* Admin Login Button Desktop */}
             <Link to="/login" className={linkClass("login")}>
               Login
@@ -147,18 +170,16 @@ setActiveSection("login")
           {/* Right Section: Mobile Menu Button */}
           <div className="flex items-center">
             <button
-              className={`md:hidden p-2.5 rounded-xl transition-all duration-300 relative group ${
-                isMenuOpen
-                  ? "bg-emerald-100 text-emerald-700 shadow-inner"
-                  : "hover:bg-gray-100 text-gray-700 hover:shadow-md"
-              }`}
+              className={`md:hidden p-2.5 rounded-xl transition-all duration-300 relative group ${isMenuOpen
+                ? "bg-emerald-100 text-emerald-700 shadow-inner"
+                : "hover:bg-gray-100 text-gray-700 hover:shadow-md"
+                }`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               <span
-                className={`absolute inset-0 rounded-xl bg-emerald-200/30 scale-0 group-hover:scale-100 transition-transform duration-300 ${
-                  isMenuOpen ? "scale-100" : ""
-                }`}
+                className={`absolute inset-0 rounded-xl bg-emerald-200/30 scale-0 group-hover:scale-100 transition-transform duration-300 ${isMenuOpen ? "scale-100" : ""
+                  }`}
               ></span>
             </button>
           </div>
@@ -217,8 +238,18 @@ setActiveSection("login")
               Contact
             </Link>
 
+            <button
+              onClick={handleTakePledge}
+              className={`${mobileLinkClass("pledge")} 
+    bg-gradient-to-r from-orange-500 to-red-500 
+    text-white`}
+            >
+              Take Pledge
+            </button>
+
+
             {/* Admin Login Mobile */}
-           <Link
+            <Link
               to="/login"
               className={mobileLinkClass("login")}
               onClick={() => setIsMenuOpen(false)}
