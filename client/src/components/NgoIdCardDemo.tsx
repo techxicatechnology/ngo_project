@@ -111,6 +111,7 @@ const NgoIdCardDemo = () => {
         {/* Footer */}
         <div className="relative z-10 flex justify-between items-end mt-6 pt-2 border-t border-dashed">
           <div className="text-center">
+            <img className="w-32 h-16" src="/sign.png"></img>
             <p className="text-[11px] font-bold">Amol KHARAT</p>
             <p className="text-[9px] text-gray-500">President</p>
           </div>
