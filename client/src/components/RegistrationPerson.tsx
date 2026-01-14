@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react';
-import { Mail, Phone, Calendar, Hash } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Mail, Phone, Calendar, Hash, X, ZoomIn } from 'lucide-react';
 import { useRegister } from '../store/useRegister';
 
 const RegistrationPerson = () => {
   const { Alluser, getAllUser, currentPage, totalPages, setCurrentPage } = useRegister();
+  
+  // State for the enlarged image modal
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
-    getAllUser(currentPage); // fetch first page
-  }, []);
+    getAllUser(currentPage);
+  }, [currentPage]); // Added currentPage dependency to trigger re-fetch on page change
 
   return (
     <div className="p-8 mt-[50px] bg-slate-50 min-h-screen font-sans">
@@ -25,7 +28,7 @@ const RegistrationPerson = () => {
           </div>
         </div>
 
-        {/* Table */}
+        {/* Table Container */}
         <div className="bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden">
           <table className="w-full border-collapse">
             <thead>
@@ -39,16 +42,25 @@ const RegistrationPerson = () => {
               {Alluser?.map((user) => (
                 <tr key={user._id} className="group hover:bg-slate-50/30 transition-all duration-300 cursor-default">
 
-                  {/* User Column */}
+                  {/* User Identity Column */}
                   <td className="px-8 py-6">
                     <div className="flex items-center gap-5">
-                      <div className="relative shrink-0 transition-transform duration-300 group-hover:scale-105">
+                      {/* Clickable Image Container */}
+                      <div 
+                        className="relative shrink-0 cursor-zoom-in group/img"
+                        onClick={() => setSelectedImage(user.image || 'https://i.pravatar.cc/150')}
+                      >
                         <img 
                           src={user.image || 'https://i.pravatar.cc/150'} 
                           alt={user.fullName} 
-                          className="w-14 h-14 rounded-2xl object-cover ring-4 ring-slate-50"
+                          className="w-14 h-14 rounded-2xl object-cover ring-4 ring-slate-50 group-hover/img:ring-indigo-100 transition-all duration-300 shadow-sm"
                         />
+                        {/* Hover Overlay Icon */}
+                        <div className="absolute inset-0 bg-indigo-600/10 opacity-0 group-hover/img:opacity-100 rounded-2xl flex items-center justify-center transition-opacity">
+                          <ZoomIn size={16} className="text-indigo-600" />
+                        </div>
                       </div>
+
                       <div>
                         <div className="text-base font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">
                           {user.fullName}
@@ -61,7 +73,7 @@ const RegistrationPerson = () => {
                     </div>
                   </td>
 
-                  {/* Contact Column */}
+                  {/* Communication Column */}
                   <td className="px-8 py-6">
                     <div className="flex flex-col gap-1.5">
                       <div className="flex items-center gap-3 text-sm text-slate-600 font-medium">
@@ -93,46 +105,78 @@ const RegistrationPerson = () => {
           </table>
         </div>
 
-        {/* Pagination */}
-        <div className="mt-6 flex justify-center items-center gap-2">
+        {/* Pagination Controls */}
+        <div className="mt-8 flex justify-center items-center gap-3">
           <button 
             onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
             disabled={currentPage === 1}
-            className="px-3 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 disabled:opacity-50"
+            className="px-4 py-2 text-sm font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 disabled:opacity-40 transition-all shadow-sm"
           >
-            Prev
+            Previous
           </button>
 
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => setCurrentPage(i + 1)}
-              className={`px-3 py-1 rounded-lg ${
-                currentPage === i + 1 ? 'bg-indigo-600 text-white' : 'bg-slate-200 hover:bg-slate-300'
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
+          <div className="flex items-center gap-1.5">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`w-9 h-9 rounded-xl text-sm font-bold transition-all ${
+                  currentPage === i + 1 
+                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' 
+                  : 'bg-white text-slate-600 border border-slate-200 hover:border-indigo-300'
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
 
           <button 
             onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="px-3 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 disabled:opacity-50"
+            className="px-4 py-2 text-sm font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 disabled:opacity-40 transition-all shadow-sm"
           >
             Next
           </button>
         </div>
 
-        <div className="mt-8 flex justify-center items-center gap-2">
-          <div className="h-px w-8 bg-slate-200"></div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-300">
+        {/* End of Records Footer */}
+        <div className="mt-12 flex justify-center items-center gap-3">
+          <div className="h-px w-12 bg-slate-200"></div>
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300">
             End of Records
           </p>
-          <div className="h-px w-8 bg-slate-200"></div>
+          <div className="h-px w-12 bg-slate-200"></div>
         </div>
-
       </div>
+
+      {/* --- IMAGE ENLARGEMENT MODAL --- */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-sm animate-in fade-in duration-300"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div className="relative max-w-2xl w-full flex flex-col items-center">
+            {/* Close Button */}
+            <button 
+              className="absolute -top-12 right-0 text-white hover:text-indigo-400 transition-colors"
+              onClick={() => setSelectedImage(null)}
+            >
+              <X size={32} />
+            </button>
+            
+            {/* Enlarged Image */}
+            <img 
+              src={selectedImage} 
+              alt="Profile Enlarged" 
+              className="w-full h-auto max-h-[80vh] object-contain rounded-3xl shadow-2xl border-4 border-white/10 animate-in zoom-in-95 duration-300"
+              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking the image itself
+            />
+            
+            <p className="mt-4 text-slate-400 text-sm font-medium">Click anywhere to close</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
