@@ -72,7 +72,10 @@ const Sidebar = () => {
       {/* Footer / User Settings */}
       <div className="p-4 mt-auto border-t border-slate-50">
         <button
-        onClick={logout}
+        onClick={() => {
+          logout();
+          navigate('/');
+        }}
         className="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-red-500 rounded-xl transition-all text-sm font-medium mt-1">
           <LogOut size={18} />
           Sign Out
