@@ -6,9 +6,11 @@ import {
   LogOut,
   ShieldCheck
 } from 'lucide-react';
+import { useLogin } from '../store/useLogin';
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const { logout } = useLogin();
 
   const menuItems = [
     { 
@@ -69,7 +71,12 @@ const Sidebar = () => {
 
       {/* Footer / User Settings */}
       <div className="p-4 mt-auto border-t border-slate-50">
-        <button className="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-red-500 rounded-xl transition-all text-sm font-medium mt-1">
+        <button
+        onClick={() => {
+          logout();
+          navigate('/');
+        }}
+        className="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-red-500 rounded-xl transition-all text-sm font-medium mt-1">
           <LogOut size={18} />
           Sign Out
         </button>

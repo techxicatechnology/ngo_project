@@ -1,4 +1,5 @@
-import { Menu, X } from "lucide-react";
+import { Menu, X, LayoutDashboard } from "lucide-react";
+
 import { useState, useEffect } from "react";
 import logo from "../assets/Logo.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -140,7 +141,10 @@ setActiveSection("login")
 
             {/* Admin Login Button Desktop */}
             <Link to="/login" className={linkClass("login")}>
-              Login
+              <div className="flex items-center gap-2">
+                <LayoutDashboard className={`w-4 h-4 ${activeSection === "login" ? "text-white" : "text-emerald-600"}`} />
+                <span className=" inline">Admin</span>
+              </div>
             </Link>
           </div>
 
@@ -223,7 +227,7 @@ setActiveSection("login")
               className={mobileLinkClass("login")}
               onClick={() => setIsMenuOpen(false)}
             >
-              Login
+              Admin
             </Link>
           </div>
         )}

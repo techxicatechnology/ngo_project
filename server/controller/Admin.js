@@ -66,3 +66,8 @@ export const checkAuth = async(req,res)=>{
    res.status(400).json({message:"Error occured while checking auth"}) 
   }
 }
+
+export const logout = (req,res)=>{
+    res.clearCookie("token")
+    res.json({message:"Logout successful"})
+}
