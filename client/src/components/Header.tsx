@@ -39,9 +39,11 @@ export const Header: React.FC = () => {
       setActiveSection("skims");
     } else if (location.pathname === "/contact") {
       setActiveSection("contact");
-    } else if (location.pathname === "/certificates") {
-      setActiveSection("certificates");
     } 
+
+    else if (location.pathname === "/child-marriage-awareness") {
+      setActiveSection("child-marriage-awareness");
+    }
     else if(location.pathname === "/login"){
 setActiveSection("login")
     }
@@ -132,11 +134,16 @@ setActiveSection("login")
             <Link to="/skims" className={linkClass("skims")}>
               Our SKIMS
             </Link>
-            <Link to="/certificates" className={linkClass("certificates")}>
-              Our Certificates
-            </Link>
+
             <Link to="/contact" className={linkClass("contact")}>
               Contact
+            </Link>
+
+            <Link
+              to="/child-marriage-awareness"
+              className={linkClass("child-marriage-awareness")}
+            >
+              Take Pledge
             </Link>
 
             {/* Admin Login Button Desktop */}
@@ -206,19 +213,21 @@ setActiveSection("login")
             >
               Our SKIMS
             </Link>
-            <Link
-              to="/certificates"
-              className={mobileLinkClass("certificates")}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Our Certificates
-            </Link>
+
             <Link
               to="/contact"
               className={mobileLinkClass("contact")}
               onClick={() => setIsMenuOpen(false)}
             >
               Contact
+            </Link>
+
+            <Link
+              to="/child-marriage-awareness"
+              className={mobileLinkClass("child-marriage-awareness")}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Take Pledge
             </Link>
 
             {/* Admin Login Mobile */}
