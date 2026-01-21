@@ -26,7 +26,7 @@ const TakePledge: React.FC<Props> = ({ isOpen, onClose }) => {
   const [typedText, setTypedText] = useState("");
   const [isTypingDone, setIsTypingDone] = useState(false);
 
-  const oathText = "मी गांभीर्याने शपथ घेतो/घेते की, मी बालविवाहाच्या प्रथेला कडाडून विरोध करेन. मी माझ्या समाजातील प्रत्येक मुलीच्या शिक्षण आणि सन्मानासाठी सदैव प्रयत्नशील राहीन.";
+  const oathText = "मी गंभीरपणे प्रतिज्ञा करतो की मी बालविवाहाच्या प्रथेला कडाडून विरोध करेन आणि समाजात सकारात्मक बदल घडवून आणण्यासाठी सतत जागरूक आणि सक्रिय राहीन. मुलींचे हक्क, शिक्षण, प्रतिष्ठा आणि सुरक्षितता यासाठी सतत काम करण्यासाठी आणि प्रत्येक मुलीला शिक्षण घेण्यासाठी आणि आदर, सुरक्षितता आणि समान संधी असलेले जीवन जगण्यासाठी प्रोत्साहित करण्यासाठी मी स्वतःला वचनबद्ध करतो.";
 
   const generateCaptcha = () => {
     setCaptcha(Math.random().toString(36).substring(2, 8).toUpperCase());
@@ -52,7 +52,7 @@ const TakePledge: React.FC<Props> = ({ isOpen, onClose }) => {
           clearInterval(interval);
           setIsTypingDone(true);
         }
-      }, 25); // typing speed (ms per character)
+      }, 60); // typing speed (ms per character)
 
       return () => clearInterval(interval);
     }
@@ -190,8 +190,14 @@ const TakePledge: React.FC<Props> = ({ isOpen, onClose }) => {
                 : "bg-slate-100 text-slate-400 cursor-not-allowed"
             }`}
           >
-            {isFormValid ? <Check size={16} /> : null}
-            {isFormValid ? "Submit Pledge" : "Complete the Form"}
+           {
+  !isTypingDone
+    ? "Read the pledge carefully"
+    : isFormValid
+      ? "Submit Pledge"
+      : "Complete the Form"
+}
+            
           </button>
         </div>
       </div>
