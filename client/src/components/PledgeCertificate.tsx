@@ -32,8 +32,8 @@ const PledgeCertificate: React.FC = () => {
       pixelRatio: 3,          // sharper
       cacheBust: true,
       backgroundColor: '#fffcf5',
-      height: 1280,           // FORCE full height
-      width: 1280
+      height: 1200,           // FORCE full height
+      width: 850
     });
 
     const link = document.createElement('a');
@@ -52,11 +52,10 @@ const PledgeCertificate: React.FC = () => {
       {/* DOWNLOAD BUTTON */}
     
       {/* CERTIFICATE */}
+      <div className='w-full mt-20 md:max-w-[850px] md:overflow-hidden max-w-[95vw] overflow-scroll mx-auto my-5 h-full '>
 <div
   ref={certificateRef}
-  className="
-    w-full mt-20 max-w-[800px] mx-auto my-5
-    bg-[#fffcf5] p-10 relative box-border
+  className=" bg-[#fffcf5] p-10 relative box-border
     shadow-[0_0_40px_rgba(0,0,0,0.15)]
     font-['Noto_Sans_Devanagari']
   "
@@ -65,6 +64,8 @@ const PledgeCertificate: React.FC = () => {
     minHeight: "1200px"         // fallback for older browsers
   }}
 >
+
+
 
 
         {/* 1. SECURITY PATTERN */}
@@ -218,6 +219,7 @@ const PledgeCertificate: React.FC = () => {
         >
           Download Certificate PNG
         </button>
+      </div>
       </div>
 
     </>
