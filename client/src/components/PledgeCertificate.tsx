@@ -16,9 +16,9 @@ const PledgeCertificate: React.FC = () => {
 
   const { userName } = usePledge();
 
-  if(!userName){
-    return null;
-  }
+if(!userName){
+  return null;
+}  
 
  const downloadPNG = async () => {
   if (!certificateRef.current) return;
@@ -181,33 +181,35 @@ const PledgeCertificate: React.FC = () => {
             </ul>
           </div>
 
-          {/* FOOTER – SIGNATURES */}
-          <div className="flex justify-between items-end px-20 mt-[60px]">
+<div className="flex justify-center mt-5">
+  <p className="w-[500px] text-center text-lg text-gray-800 font-medium leading-relaxed">
+    आपली ही <span className="text-[#7a5230] font-bold">सामाजिक बांधिलकी</span> आणि <span className="text-green-900 font-semibold">बाल हक्कांसाठी दिलेल्या समर्पित सेवेमुळे</span> समाजातील बदलाची प्रेरणा भविष्यातील पिढ्यांसाठीही आदर्श ठरेल.  
+    आम्ही आपल्या <span className="text-[#d4af37] font-bold">अमूल्य योगदानाबद्दल</span> मनःपूर्वक आभार व्यक्त करतो आणि आपल्या पुढील उपक्रमांसाठी <span className="text-green-900 font-semibold">शुभेच्छा</span> देतो.
+  </p>
+</div>
 
-            {["कार्यक्रम संचालक", "अधिकृत स्वाक्षरी"].map((label, i) => (
+          {/* FOOTER – SIGNATURES */}
+          <div className="flex justify-between items-end px-20 mt-[px]">
+
+            {["कार्यक्रम संचालक","प्रमुख कार्यकारी अधिकारी"].map((label, i) => (
               <div key={i} className="text-center">
 
-                <div className="flex items-end justify-center">
+                <div className="">
                   <img
                     src="/signature.png"
                     className="w-[180px] object-contain mix-blend-multiply block"
                     style={{
                       filter: "brightness(1.1) contrast(1.2)",
-                      marginBottom: "-4px"
                     }}
                   />
                 </div>
-
-                <div className="border-t border-[#7a5230] w-[180px] mt-0"></div>
-
+                <div className="border-t border-[#7a5230] w-[180px] "></div>
                 <p className="text-sm font-bold text-[#7a5230] mt-1">
                   {label}
                 </p>
               </div>
             ))}
-
           </div>
-
         </div>
       </div>
 
