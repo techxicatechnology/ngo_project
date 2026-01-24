@@ -9,8 +9,10 @@ import {
   TrendingUp,
   Users as UsersIcon,
   Image as ImageIcon,
+  FileSpreadsheet,
   X,
 } from "lucide-react";
+import * as XLSX from "xlsx";
 
 const DonationPerson = () => {
   const { getAllDonation, allDonations, updateDonation } = useDonation();
@@ -21,6 +23,26 @@ const DonationPerson = () => {
   useEffect(() => {
     getAllDonation();
   }, [getAllDonation]);
+
+
+   const exportToExcel = () => {
+    if (!allDonations || allDonations.length === 0) return;
+
+    const data = allDonations.map((d, index) => ({
+      "S.N": index + 1,
+      Name: d.name,
+      "Unique ID": d.uniqueId,
+      Amount: d.amount,
+      "Transaction ID": d.transactionId || "---",
+      Status: d.status,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Donations");
+
+    XLSX.writeFile(workbook, "donations.xlsx");
+  };
 
   const statusOptions = [
     { value: "pending", color: "bg-amber-50 text-amber-600 border-amber-100", icon: <Clock size={12} /> },
@@ -88,8 +110,15 @@ const DonationPerson = () => {
 
         {/* TABLE CONTAINER */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-50">
+          <div className="px-6 flex items-center justify-between py-4 border-b border-slate-50">
             <h2 className="text-lg font-bold text-slate-800">Donation History</h2>
+              <button
+            onClick={exportToExcel}
+            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg shadow-emerald-100 active:scale-95"
+          >
+            <FileSpreadsheet size={18} />
+            Export to Excel
+          </button>
           </div>
 
           <div className="overflow-x-auto">
