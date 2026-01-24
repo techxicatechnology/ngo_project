@@ -23,6 +23,12 @@ const Sidebar = () => {
       label: 'Donation', 
       path: '/donationPerson' 
     },
+    {
+      icon: <ShieldCheck size={18} />, 
+      label: 'Update Admin', 
+      path: '/update-admin' 
+    }
+
   ];
 
   return (

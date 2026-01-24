@@ -25,7 +25,7 @@ res.cookie("token",token,{
     maxAge:60*60*1000
 })
 
-    res.json({message:"Login successful",data:{token}})
+    res.json({email:user.email})
 
 }
 
@@ -70,4 +70,22 @@ export const checkAuth = async(req,res)=>{
 export const logout = (req,res)=>{
     res.clearCookie("token")
     res.json({message:"Logout successful"})
+}
+
+export const updateAdmin = async(req,res)=>{
+      const id=req.user
+    let {password} = req.body;
+    if(!password){
+        return res.status(404).josn({success:false,message:"Provode all field"})
+    }
+
+    const user  = await adminmodel.findById(id)
+    if(!user){
+        return res.status(404).josn({success:false,message:"User not found"})
+    }
+    const hashedPassword = await bcrypt.hash(password,10)
+    user.password = hashedPassword
+    await user.save()
+    res.json({success:true,message:"Password updated successfully"})
+
 }

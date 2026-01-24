@@ -27,6 +27,7 @@ import { Navigate } from "react-router-dom";
 import RegistrationPerson from "./components/RegistrationPerson";
 import DonationPerson from "./components/DonationPerson";
 import PledgeCertificate from "./components/PledgeCertificate";
+import UpdateAdmin from "./components/UpdateAdmin";
 
 // =====================
 // 👇 SCROLL TO TOP FIX
@@ -98,6 +99,7 @@ const App: React.FC = () => {
         <Route element={user ? <Layout /> : <LoginPage />}>
           <Route path="/donationPerson" element={<DonationPerson />} />
           <Route path="/registrationPerson" element={<RegistrationPerson />} />
+          <Route path="/update-admin" element={<UpdateAdmin />} />
         </Route>
       </Routes>
     </>

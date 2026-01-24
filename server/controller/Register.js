@@ -35,6 +35,16 @@ export const RegisterUser = async (req, res) => {
       });
     }
 
+
+    const userAlreadyExists = await userModel.findOne({ $or: [{ email }, { mobileNumber }] });
+    if (userAlreadyExists) {
+      return res.status(400).json({
+        success: false,
+        message: "User already exists",
+      });
+    }
+
+
     const uniqueId = "YUVA" + uuidv4().toUpperCase().slice(0, 4);
 
     const register = await userModel.create({
