@@ -33,6 +33,8 @@ interface NgoCardStore {
   itemsPerPage: number;
   getAllUser: (page?: number) => Promise<void>;
   setCurrentPage: (page: number) => void;
+  error: Error | null;
+  
 }
 
 export const useRegister = create<NgoCardStore>((set, get) => ({
@@ -42,6 +44,7 @@ export const useRegister = create<NgoCardStore>((set, get) => ({
   currentPage: 1,
   itemsPerPage: 10,
   isRegistering: false,
+  error:null,
 
   registerUser: async (data) => {
     set({ isRegistering: true });
@@ -56,10 +59,12 @@ export const useRegister = create<NgoCardStore>((set, get) => ({
       const res = await axiosInstance.post("/add", formData);
       console.log("New user is ", res.data.data);
       toast.success("Registration successful");
-      set({ user: res.data.data });
+      set({ user: res.data.data, error: null });
     } catch (error) {
       console.error("Failed to register user", error);
-      toast.error("Failed to register user");
+      const err = error as Error;
+      toast.error(err?.response?.data?.message || "Failed to register user");
+      set({ error: err });
     } finally {
       set({ isRegistering: false });
     }

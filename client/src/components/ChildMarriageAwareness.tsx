@@ -16,15 +16,37 @@ const ChildMarriageAwarenessMarathi = () => {
       <header className="pt-20 pb-16 px-6 max-w-4xl mx-auto text-center">
         
 
-        <h1 className="blog-title text-5xl md:text-7xl font-black tracking-tight leading-[1.1] mb-10 font-sans">
-          स्वप्नांना सीमा नसतात, <br />
-          <span className="text-orange-600 italic">तिला भरारी घेऊ द्या!</span>
-        </h1>
+            <div className="max-w-3xl mx-auto px-6">
+  <div className="bg-orange-50 rounded-3xl p-10 text-center border border-orange-100">
+    
+    <h3 className="text-2xl font-bold mb-3 text-slate-900">
+      आजच प्रतिज्ञा घ्या
+    </h3>
 
-        <p className="blog-excerpt text-xl md:text-2xl text-slate-500 font-light leading-relaxed max-w-2xl mx-auto font-sans">
-          लग्नाच्या बेडीत अडकण्यापेक्षा, तिच्या हातात पुस्तक द्या. तिचे भविष्य फुलवण्यासाठी आजच बालविवाहाविरुद्ध आवाज उठवा.
-        </p>
+    <p className="text-slate-600 mb-6 max-w-xl mx-auto">
+      मी वचन देतो/देते की माझ्या परिसरात बालविवाहाविरुद्ध आवाज उठवेन,  
+      प्रत्येक मुलीच्या शिक्षणाचा आणि स्वातंत्र्याचा आदर करेन.
+    </p>
+
+    <button
+    onClick={() => setPledgeOpen(true)}
+      className="group inline-flex items-center gap-3 
+        bg-orange-600 hover:bg-orange-700 
+        text-white font-bold px-8 py-4 rounded-full
+        transition-all shadow hover:shadow-lg"
+    >
+      <GraduationCap className="group-hover:-rotate-6 transition-transform" />
+      प्रतिज्ञा घ्या
+    </button>
+
+    <p className="text-xs text-slate-400 mt-4">
+      तुमची प्रतिज्ञा एखाद्या मुलीच्या भविष्याला नवी दिशा देऊ शकते.
+    </p>
+  </div>
+</div>
       </header>
+
+
 
       {/* Main Feature Image */}
       <section className="px-4 md:px-12 mb-24">
@@ -97,34 +119,7 @@ const ChildMarriageAwarenessMarathi = () => {
       </article>
 
 {/* ===== PLEDGE SECTION ===== */}
-<div className="max-w-3xl mx-auto px-6 mb-24">
-  <div className="bg-orange-50 rounded-3xl p-10 text-center border border-orange-100">
-    
-    <h3 className="text-2xl font-bold mb-3 text-slate-900">
-      आजच प्रतिज्ञा घ्या
-    </h3>
 
-    <p className="text-slate-600 mb-6 max-w-xl mx-auto">
-      मी वचन देतो/देते की माझ्या परिसरात बालविवाहाविरुद्ध आवाज उठवेन,  
-      प्रत्येक मुलीच्या शिक्षणाचा आणि स्वातंत्र्याचा आदर करेन.
-    </p>
-
-    <button
-    onClick={() => setPledgeOpen(true)}
-      className="group inline-flex items-center gap-3 
-        bg-orange-600 hover:bg-orange-700 
-        text-white font-bold px-8 py-4 rounded-full
-        transition-all shadow hover:shadow-lg"
-    >
-      <GraduationCap className="group-hover:-rotate-6 transition-transform" />
-      प्रतिज्ञा घ्या
-    </button>
-
-    <p className="text-xs text-slate-400 mt-4">
-      तुमची प्रतिज्ञा एखाद्या मुलीच्या भविष्याला नवी दिशा देऊ शकते.
-    </p>
-  </div>
-</div>
 
 <TakePledge
         isOpen={isPledgeOpen}

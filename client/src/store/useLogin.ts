@@ -8,6 +8,7 @@ interface LoginStore{
     login : (email : string , password : string) => Promise<void>;
     checkAuth :()=>Promise<void>;
     logout : ()=>Promise<void>;
+    update:(password:string)=>Promise<void>;
 }
 
 
@@ -16,7 +17,8 @@ export const useLogin = create<LoginStore>((set)=>({
     checkAuth:async()=>{
         try {
            const res = await axiosInstance.get("/admin/check")
-console.log(res.data)
+console.log("check auth res",res.data)
+
 set({user:res.data}) 
         } catch (error) {
             console.log("error is",error)
@@ -39,6 +41,17 @@ logout: async () => {
   } catch (error: any) {
     console.log("error is", error.response?.data || error.message);
     toast.error(error.response?.data?.message || "Logout failed");
+  }
+},
+update: async (password: string) => {
+  try {
+ const res =    await axiosInstance.post("/admin/update-admin", { password });
+ console.log("update res",res)
+ toast.success(res.data.message)
+ set({ user: null });
+  } catch (error: any) {
+    console.log("error is", error.response?.data || error.message);
+    toast.error(error.response?.data?.message || "Update failed");
   }
 }
 }))

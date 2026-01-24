@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toast, Toaster } from "react-hot-toast";
-import { Clipboard, CheckCircle, Clock, AlertCircle, Search, CreditCard, X, FileImage, User, DollarSign, Mail } from "lucide-react";
+import { Clipboard, CheckCircle, Clock, AlertCircle, Search, CreditCard, X, FileImage, User, DollarSign, Mail, IndianRupee } from "lucide-react";
 import { useDonation } from "../store/useDonation";
 import DonationReceiptCard from "./DonationReceiptCard";
 
@@ -172,7 +172,7 @@ export default function DonationPage() {
                   />
                 </div>
                 <div className="relative">
-                  <DollarSign size={16} className="absolute left-3 top-3.5 text-slate-400" />
+                  <IndianRupee size={16} className="absolute left-3 top-3.5 text-slate-400" />
                   <input
                     type="number"
                     placeholder="Amount"
