@@ -112,7 +112,7 @@ const NgoIdCardDemo = () => {
           <div className="flex flex-col">
             <img
               src="/sign.png"
-              className="w-24 h-12 object-contain mix-blend-multiply opacity-80"
+              className=" w-32 h-16 object-cover mix-blend-multiply opacity-80"
               alt="Signature"
             />
             <div className="mt-1">
