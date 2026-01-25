@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import { Clipboard, CheckCircle, Clock, AlertCircle, Search, CreditCard, X, FileImage, User, DollarSign, Mail, IndianRupee } from "lucide-react";
 import { useDonation } from "../store/useDonation";
@@ -27,6 +27,7 @@ export default function DonationPage() {
   const [checkId, setCheckId] = useState<string>("");
   const [checkResult, setCheckResult] = useState<StatusResult | null>(null);
   const [viewReceipt, setViewReceipt] = useState<boolean>(false);
+  const hasAutoChecked = useRef<boolean>(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -45,6 +46,18 @@ export default function DonationPage() {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl,status]);
+
+  // Auto-check status when ID is pre-filled from donation success
+  useEffect(() => {
+    if (currentView === "status" && checkId && checkId.startsWith("DON-") && !hasAutoChecked.current) {
+      hasAutoChecked.current = true;
+      handleCheckStatus();
+    }
+    // Reset when switching away from status view
+    if (currentView !== "status") {
+      hasAutoChecked.current = false;
+    }
+  }, [currentView, checkId]);
 
   const removeImage = () => {
     setScreenshot(null);
@@ -228,14 +241,53 @@ export default function DonationPage() {
             </form>
 
             {donation && (
-              <div className="mt-6 bg-slate-900 rounded-2xl p-4 flex items-center justify-between border border-slate-800">
-                <div>
-                  <p className="text-[10px] font-bold text-slate-500 uppercase">Track your Donation ID</p>
-                  <p className="text-lg font-mono font-bold text-white tracking-wider">{donation.uniqueId}</p>
+              <div className="mt-6 space-y-4 animate-in fade-in slide-in-from-bottom-4">
+                {/* Success Message */}
+                <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-5 text-center">
+                  <div className="flex justify-center mb-3">
+                    <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                      <CheckCircle size={24} className="text-green-600" />
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-black text-green-900 mb-1">Donation Submitted Successfully!</h3>
+                  <p className="text-xs text-green-700 mb-4">Please save your Donation ID to track status</p>
+                  
+                  {/* Donation ID Display */}
+                  <div className="bg-white rounded-xl p-4 mb-4 border-2 border-green-200">
+                    <p className="text-[10px] font-bold text-slate-500 uppercase mb-2">Your Donation ID</p>
+                    <div className="flex items-center justify-center gap-3">
+                      <p className="text-2xl font-mono font-black text-slate-900 tracking-wider">{donation.uniqueId}</p>
+                      <button 
+                        onClick={() => copyToClipboard(donation.uniqueId)} 
+                        className="p-2 bg-green-100 hover:bg-green-200 rounded-xl text-green-700 transition-colors"
+                        title="Copy ID"
+                      >
+                        <Clipboard size={20} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Instructions */}
+                  <div className="bg-slate-50 rounded-xl p-3 mb-4">
+                    <p className="text-xs font-semibold text-slate-700 mb-2">📌 Important:</p>
+                    <ul className="text-xs text-slate-600 space-y-1 text-left">
+                      <li>• Copy and save this ID for future reference</li>
+                      <li>• Use this ID to check your donation status</li>
+                      <li>• Your donation is being verified</li>
+                    </ul>
+                  </div>
+
+                  {/* Quick Action Button */}
+                  <button 
+                    onClick={() => {
+                      setCheckId(donation.uniqueId);
+                      setCurrentView("status");
+                    }}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-green-200 flex items-center justify-center gap-2"
+                  >
+                    <Search size={18} /> Check Status Now
+                  </button>
                 </div>
-                <button onClick={() => copyToClipboard(donation.uniqueId)} className="p-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-slate-300">
-                  <Clipboard size={20} />
-                </button>
               </div>
             )}
           </div>

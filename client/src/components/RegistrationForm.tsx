@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRegister } from "../store/useRegister";
 import {
@@ -11,8 +11,13 @@ import {
   Phone,
   MapPin,
   CheckCircle2,
+  Clipboard,
+  Download,
+  AlertCircle,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { toPng } from "html-to-image";
+import toast from "react-hot-toast";
 
 // --- Types ---
 interface RegisterUser {
@@ -83,7 +88,7 @@ const FormInput = ({
 };
 
 const RegistrationForm = () => {
-  const { registerUser, isRegistering,error } = useRegister();
+  const { registerUser, isRegistering, error, user } = useRegister();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<RegisterUser>({
@@ -103,6 +108,9 @@ const RegistrationForm = () => {
     Partial<Record<keyof RegisterUser, string>>
   >({});
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [duplicateWarning, setDuplicateWarning] = useState<{field: string, message: string} | null>(null);
+  const idCardRef = useRef<HTMLDivElement>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -148,16 +156,51 @@ const RegistrationForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Watch for user registration success or errors
+  useEffect(() => {
+    if (user && !error) {
+      setShowSuccess(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (error && (error as any)?.response?.data?.field) {
+      const errorData = (error as any).response.data;
+      setDuplicateWarning({
+        field: errorData.field,
+        message: errorData.message
+      });
+    }
+  }, [user, error]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    const registerUserResponse = await registerUser(formData);
-    console.log("Response is",registerUserResponse);
-    if(error){
-      console.log("Error is",error);
+    setDuplicateWarning(null);
+    setShowSuccess(false);
+    
+    await registerUser(formData);
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success("ID Copied!");
+  };
+
+  const handleDownloadIdCard = async () => {
+    if (!idCardRef.current) return;
+    try {
+      const dataUrl = await toPng(idCardRef.current, { 
+        pixelRatio: 4,
+        cacheBust: true 
+      });
+      const link = document.createElement("a");
+      const fileName = user ? `ID-${user.name.replace(/\s+/g, "-")}.png` : `ID-Card.png`;
+      link.download = fileName;
+      link.href = dataUrl;
+      link.click();
+      toast.success("ID Card downloaded!");
+    } catch (err) {
+      console.error("Download failed", err);
+      toast.error("Failed to download ID card");
     }
-
-
   };
 
   return (
@@ -176,6 +219,106 @@ const RegistrationForm = () => {
             नोंदणी अर्ज
           </p>
         </div>
+
+        {/* Success Message */}
+        {showSuccess && user && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 bg-green-50 border-2 border-green-200 rounded-2xl p-6"
+          >
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+                <CheckCircle2 size={32} className="text-green-600" />
+              </div>
+            </div>
+            <h3 className="text-xl font-black text-green-900 text-center mb-2">
+              Registration Successful! 🎉
+            </h3>
+            <p className="text-sm text-green-700 text-center mb-4">
+              Your membership has been registered successfully
+            </p>
+            
+            {/* Member ID Display */}
+            <div className="bg-white rounded-xl p-4 mb-4 border-2 border-green-200">
+              <p className="text-xs font-bold text-slate-500 uppercase mb-2 text-center">Your Member ID</p>
+              <div className="flex items-center justify-center gap-3">
+                <p className="text-2xl font-mono font-black text-slate-900 tracking-wider">{user.uniqueId}</p>
+                <button
+                  onClick={() => copyToClipboard(user.uniqueId)}
+                  className="p-2 bg-green-100 hover:bg-green-200 rounded-xl text-green-700 transition-colors"
+                  title="Copy ID"
+                >
+                  <Clipboard size={20} />
+                </button>
+              </div>
+            </div>
+
+            {/* Download Button */}
+            <div className="flex flex-col items-center gap-3">
+              <button
+                onClick={handleDownloadIdCard}
+                className="w-full bg-[#119F52] hover:bg-[#0d7a3f] text-white font-bold py-3 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2"
+              >
+                <Download size={20} /> Download ID Card
+              </button>
+              <p className="text-xs text-slate-500 text-center">
+                Save your Member ID for future reference
+              </p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Duplicate Warning */}
+        {duplicateWarning && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 flex items-start gap-3"
+          >
+            <AlertCircle size={24} className="text-amber-600 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-bold text-amber-900 mb-1">{duplicateWarning.message}</p>
+              <p className="text-sm text-amber-700">
+                Please use a different {duplicateWarning.field === "email" ? "email address" : "mobile number"}
+              </p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Hidden ID Card for Download */}
+        {user && (
+          <div className="absolute -left-[9999px] opacity-0 pointer-events-none">
+            <div ref={idCardRef} className="w-[380px] bg-white rounded-[24px] shadow-2xl border border-slate-200 overflow-hidden" style={{ height: "540px" }}>
+              <div className="h-full bg-[#0f2a44] rounded-xl p-6 text-white relative">
+                <div className="text-center mb-4">
+                  <h2 className="text-xl font-black">युवाशक्ती बहुउद्देशीय</h2>
+                  <p className="text-xs text-amber-400">सेवाभावी संस्था</p>
+                </div>
+                <div className="bg-white rounded-xl p-4 mt-8">
+                  <div className="flex justify-center mb-4">
+                    <img 
+                      src={user.photo || '/default-avatar.png'} 
+                      alt="Profile" 
+                      className="w-24 h-24 rounded-full object-cover border-4 border-slate-200"
+                      crossOrigin="anonymous"
+                    />
+                  </div>
+                  <div className="text-center text-slate-900">
+                    <h3 className="text-lg font-black mb-2">{user.name.toUpperCase()}</h3>
+                    <p className="text-xs text-slate-500 mb-2">Member ID</p>
+                    <p className="text-xl font-mono font-black text-[#119F52] mb-4">{user.uniqueId}</p>
+                    <div className="text-xs space-y-1 text-left bg-slate-50 p-3 rounded-lg">
+                      <p><span className="font-bold">Area:</span> {user.area}</p>
+                      <p><span className="font-bold">Issue Date:</span> {user.issueDate}</p>
+                      <p><span className="font-bold">Phone:</span> {user.phone}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Profile Photo */}
@@ -222,25 +365,41 @@ const RegistrationForm = () => {
                 error={errors.fullName}
               />
 
-              <FormInput
-                name="mobileNumber"
-                label="मोबाईल क्रमांक"
-                placeholder="10-digit number"
-                icon={<Phone size={14} />}
-                value={formData.mobileNumber}
-                onChange={handleChange}
-                error={errors.mobileNumber}
-              />
+              <div className="relative">
+                <FormInput
+                  name="mobileNumber"
+                  label="मोबाईल क्रमांक"
+                  placeholder="10-digit number"
+                  icon={<Phone size={14} />}
+                  value={formData.mobileNumber}
+                  onChange={handleChange}
+                  error={errors.mobileNumber || (duplicateWarning?.field === "mobileNumber" ? duplicateWarning.message : undefined)}
+                />
+                {duplicateWarning?.field === "mobileNumber" && (
+                  <div className="mt-1 flex items-center gap-1 text-amber-600 text-xs">
+                    <AlertCircle size={12} />
+                    <span>{duplicateWarning.message}</span>
+                  </div>
+                )}
+              </div>
 
-              <FormInput
-                name="email"
-                label="ईमेल"
-                placeholder="name@example.com"
-                icon={<Mail size={14} />}
-                value={formData.email}
-                onChange={handleChange}
-                error={errors.email}
-              />
+              <div className="relative">
+                <FormInput
+                  name="email"
+                  label="ईमेल"
+                  placeholder="name@example.com"
+                  icon={<Mail size={14} />}
+                  value={formData.email}
+                  onChange={handleChange}
+                  error={errors.email || (duplicateWarning?.field === "email" ? duplicateWarning.message : undefined)}
+                />
+                {duplicateWarning?.field === "email" && (
+                  <div className="mt-1 flex items-center gap-1 text-amber-600 text-xs">
+                    <AlertCircle size={12} />
+                    <span>{duplicateWarning.message}</span>
+                  </div>
+                )}
+              </div>
 
               <FormInput
                 name="dateOfBirth"

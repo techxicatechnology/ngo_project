@@ -24,7 +24,7 @@ interface RegisterUserPayload {
 }
 
 interface NgoCardStore {
-  user: User[] | null;
+  user: User | null;
   registerUser: (data: RegisterUserPayload) => Promise<void>;
   isRegistering: boolean;
   Alluser: any[];
@@ -58,8 +58,19 @@ export const useRegister = create<NgoCardStore>((set, get) => ({
 
       const res = await axiosInstance.post("/add", formData);
       console.log("New user is ", res.data.data);
+      
+      // Map API response to match User interface
+      const userData = {
+        name: res.data.data.name,
+        uniqueId: res.data.data.uniqueId,
+        area: res.data.data.area,
+        photo: res.data.data.image, // Map image to photo
+        issueDate: res.data.data.issueDate,
+        phone: res.data.data.phone,
+      };
+      
       toast.success("Registration successful");
-      set({ user: res.data.data, error: null });
+      set({ user: userData, error: null });
     } catch (error) {
       console.error("Failed to register user", error);
       const err = error as Error;
