@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import AmolKharatImg from "../assets/Amol Kharat- Aadyaksh.jpg";
 import AnilKharatImg from "../assets/Anil Kharat- Sahasachive.jpg";
-import NimaKharatImg from "../assets/Nima Amol Kharat - Koshadyaksh.jpg";
+import NimaKharatImg from "../assets/Nima Amol Kharat - Koshadyaksh.jpeg";
 import MilindKharatImg from "../assets/milind kharat member.jpg";
 import VilasKharatImg from "../assets/vilas kharat voice president.jpg";
 import vishalgaikwadImg from "../assets/vishal gaikwad secretory.jpg";
