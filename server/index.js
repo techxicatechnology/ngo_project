@@ -42,19 +42,19 @@ app.get("/", (req, res) => {
     status: "ok",
     timestamp: new Date().toISOString(),
     endpoints: {
-      register: "POST /api/add",
-      list: "GET /api/list",
-      donation: "POST /api/donate",
-      admin: "/api/admin/*"
+      register: "POST /add",
+      list: "GET /list",
+      donation: "POST /donate/create",
+      admin: "/admin/*"
     }
   });
 });
 
-app.use("/api",Registerrouter)
-app.use("/api/donate",Donationrouter)
-app.use("/api/admin",Adminrouter)
+app.use("/",Registerrouter)
+app.use("/donate",Donationrouter)
+app.use("/admin",Adminrouter)
 
-app.get("/api/get",(req,res)=>{
+app.get("/get",(req,res)=>{
   res.send("hi")
 })
 
@@ -65,10 +65,17 @@ app.use((req, res) => {
     message: `The route ${req.originalUrl} does not exist`,
     method: req.method,
     availableRoutes: [
-      "POST /api/add",
-      "GET /api/list",
-      "POST /api/donate",
-      "GET /api/admin/*"
+      "POST /add",
+      "GET /list",
+      "POST /donate/create",
+      "GET /donate/getStatus/:uniqueId",
+      "GET /donate/list",
+      "POST /donate/updateStatus/:uniqueId",
+      "POST /admin/login",
+      "POST /admin/register",
+      "GET /admin/check",
+      "POST /admin/logout",
+      "POST /admin/update-admin"
     ]
   });
 });

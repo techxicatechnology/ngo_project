@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const baseURL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const baseURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 // Log the baseURL in development to help debug
 if (import.meta.env.DEV) {
