@@ -3,8 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   Users, 
   HeartHandshake, 
-  LogOut,
-  ShieldCheck
+  LogOut
 } from 'lucide-react';
 import { useLogin } from '../store/useLogin';
 
@@ -22,13 +21,7 @@ const Sidebar = () => {
       icon: <HeartHandshake size={18} />, 
       label: 'Donation', 
       path: '/donationPerson' 
-    },
-    {
-      icon: <ShieldCheck size={18} />, 
-      label: 'Update Admin', 
-      path: '/update-admin' 
     }
-
   ];
 
   return (

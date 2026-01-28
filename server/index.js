@@ -74,8 +74,7 @@ app.use((req, res) => {
       "POST /admin/login",
       "POST /admin/register",
       "GET /admin/check",
-      "POST /admin/logout",
-      "POST /admin/update-admin"
+      "POST /admin/logout"
     ]
   });
 });

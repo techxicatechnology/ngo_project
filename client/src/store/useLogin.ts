@@ -8,7 +8,6 @@ interface LoginStore{
     login : (email : string , password : string) => Promise<void>;
     checkAuth :()=>Promise<void>;
     logout : ()=>Promise<void>;
-    update:(password:string)=>Promise<void>;
 }
 
 
@@ -41,17 +40,6 @@ logout: async () => {
   } catch (error: any) {
     console.log("error is", error.response?.data || error.message);
     toast.error(error.response?.data?.message || "Logout failed");
-  }
-},
-update: async (password: string) => {
-  try {
- const res =    await axiosInstance.post("/admin/update-admin", { password });
- console.log("update res",res)
- toast.success(res.data.message)
- set({ user: null });
-  } catch (error: any) {
-    console.log("error is", error.response?.data || error.message);
-    toast.error(error.response?.data?.message || "Update failed");
   }
 }
 }))

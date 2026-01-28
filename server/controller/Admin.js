@@ -94,33 +94,3 @@ export const logout = (req,res)=>{
     res.clearCookie("token")
     res.json({message:"Logout successful"})
 }
-
-export const updateAdmin = async(req,res)=>{
-    try {
-        const id = req.user
-        let {password} = req.body;
-        
-        if(!password){
-            return res.status(400).json({success:false,message:"Password is required"})
-        }
-
-        if(password.length < 6){
-            return res.status(400).json({success:false,message:"Password must be at least 6 characters long"})
-        }
-
-        const user = await adminmodel.findById(id)
-        if(!user){
-            return res.status(404).json({success:false,message:"User not found"})
-        }
-        
-        const hashedPassword = await bcrypt.hash(password,10)
-        user.password = hashedPassword
-        await user.save()
-        
-        console.log(`✅ Password updated for admin: ${user.email}`);
-        res.json({success:true,message:"Password updated successfully"})
-    } catch (error) {
-        console.error("❌ Update admin error:", error);
-        res.status(500).json({success:false,message:"Server error during password update"})
-    }
-}
