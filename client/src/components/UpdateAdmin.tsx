@@ -13,10 +13,18 @@ useEffect(() => {
   console.log("user",user);
 }, [user]);
 
-  const handleUpdate = (e: FormEvent) => {
+  const handleUpdate = async (e: FormEvent) => {
     e.preventDefault();
-    console.log({ email, password });
-    alert('Admin credentials updated successfully.');
+    if (!password) {
+      alert('Please enter a new password');
+      return;
+    }
+    if (password.length < 6) {
+      alert('Password must be at least 6 characters long');
+      return;
+    }
+    await update(password);
+    setPassword(''); // Clear password field after update
   };
 
   return (
@@ -91,8 +99,7 @@ useEffect(() => {
 
           {/* Submit */}
           <button
-            onClick={() => update(password)}
-            type="button"
+            type="submit"
             className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl transition-all shadow-md shadow-emerald-100 mt-4 active:scale-[0.98]"
           >
             Update Credentials

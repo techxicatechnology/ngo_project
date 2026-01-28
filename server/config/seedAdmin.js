@@ -6,27 +6,37 @@ dotenv.config();
 
 export const seedAdmin = async () => {
   try {
-    // Check if admin already exists
-    const existingAdmin = await adminmodel.findOne({ email: process.env.ADMIN_EMAIL });
-    
-    if (existingAdmin) {
-      console.log("✅ Admin user already exists");
+    // Check if credentials are provided
+    if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
+      console.log("⚠️  ADMIN_EMAIL and ADMIN_PASSWORD not set in .env - skipping admin creation");
       return;
     }
 
-    // Create admin if credentials are provided in .env
-    if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
+    const email = process.env.ADMIN_EMAIL.toLowerCase().trim();
+    console.log(`🔍 Checking for admin with email: ${email}`);
+    
+    // Check if admin already exists
+    const existingAdmin = await adminmodel.findOne({ email: email });
+    
+    if (existingAdmin) {
+      // Update password if admin exists (useful for password changes)
       const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
-      await adminmodel.create({
-        email: process.env.ADMIN_EMAIL,
-        password: hashedPassword,
-      });
-      console.log(`✅ Admin user created: ${process.env.ADMIN_EMAIL}`);
-    } else {
-      console.log("⚠️  ADMIN_EMAIL and ADMIN_PASSWORD not set in .env - skipping admin creation");
+      existingAdmin.password = hashedPassword;
+      await existingAdmin.save();
+      console.log(`✅ Admin password updated for: ${email}`);
+      return;
     }
+
+    // Create new admin if doesn't exist
+    const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
+    await adminmodel.create({
+      email: email,
+      password: hashedPassword,
+    });
+    console.log(`✅ Admin user created: ${email}`);
   } catch (error) {
     console.error("❌ Error seeding admin:", error.message);
+    console.error("Full error:", error);
   }
 };
 
