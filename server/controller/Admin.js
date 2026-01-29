@@ -31,8 +31,8 @@ export const login = async(req,res)=>{
 
         res.cookie("token",token,{
             httpOnly:true,
-            secure:process.env.NODE_ENV === "production", // Use secure cookies in production
-            sameSite:"lax", // Changed from "strict" to "lax" for better cross-origin support
+            secure:true, 
+            sameSite:"none", 
             maxAge:60*60*1000
         })
 
@@ -63,8 +63,8 @@ export const register = async(req,res)=>{
         const token = jwt.sign({id:newUser._id},process.env.JWT_SECRET,{expiresIn:"1h"})
         res.cookie("token",token,{
             httpOnly:true,
-            secure:process.env.NODE_ENV === "production",
-            sameSite:"lax",
+            secure:true,
+            sameSite:"none",
             maxAge:60*60*1000
         })
         res.json({message:"Register successful",data:{token}})
